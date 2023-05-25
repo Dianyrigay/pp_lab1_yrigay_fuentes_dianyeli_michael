@@ -149,7 +149,6 @@ def imprimir_nombre_dato(jugador: dict, key_ingresada: str) -> None:
         if key_ingresada in jugador:
             if type(valor_jugador) == type(str()):
                 dato = jugador[key_ingresada]
-
         if key_ingresada in valor_jugador:
             if type(valor_jugador) == type(dict()):
                 for key, valor in valor_jugador.items():
@@ -159,8 +158,18 @@ def imprimir_nombre_dato(jugador: dict, key_ingresada: str) -> None:
                 for elemento in valor_jugador.items():
                     dato = elemento
 
-    print(nombre.ljust(20), "-", dato)
-
+    if type(dato) == type(str()) or type(dato) == type(int()) or type(dato) == type(float()):
+        print(nombre.ljust(20), "-", dato)
+    if type(dato) == type(dict()):
+        print("\nNombre: ".ljust(20), nombre)
+        print("Estadísticas:")
+        for key, valor in dato.items():
+            print(" ".ljust(20),f"{key.capitalize()}: ", valor)
+    if type(dato) == type(list()):
+        print("\nNombre: ".ljust(20), nombre)
+        print("Logros:")
+        for elemento in dato:
+            print(" ".ljust(20),f"{elemento.capitalize()}")
 
 def solicitar_dato(dato: str) -> str:
     """
@@ -229,8 +238,7 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
         indice_jugador = solicitar_dato('indice')
         if indice_jugador == '-1':
             break
-        regex = r'^[0-11]+$'
-        condicion_valida = re.search(regex, indice_jugador)
+        condicion_valida = re.search(r'^[0-9]$|^1[0-1]$', indice_jugador)
         condicion_valida = bool(condicion_valida)
 
     indice_jugador = int(indice_jugador)
@@ -242,20 +250,15 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
     indice = 0
     for jugador in lista_jugadores:
         if indice_jugador == indice:
-            nombre = jugador['nombre']
-
             dict_data_jugador = {}
-            print(f"\nNombre: {nombre}")
             for dato,valor in jugador.items():
                 if dato == 'estadisticas':
-                    print("Estadísticas:")
                     for estadistica, valor_estadistica in valor.items():
                         dict_data_jugador[estadistica] = valor_estadistica
-                        print(f"{estadistica} : {valor_estadistica} | ", end="")
                 elif dato != "logros":
                     dict_data_jugador[dato] = valor
-            print("\n")
             lista_data_jugador = [dict_data_jugador]
+            imprimir_nombre_dato(jugador, 'estadisticas')
         indice += 1
 
     return lista_data_jugador
@@ -323,6 +326,7 @@ def obtener_jugador_nombre_logros(lista_jugadores: list):
             condicion_valida = bool(condicion_valida)
             if condicion_valida:
                 dict_nombre_logros = obtener_nombre_dato(jugador,'logros')
+                imprimir_nombre_dato(jugador,'logros')
                 return dict_nombre_logros
 
 # Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por
@@ -389,7 +393,7 @@ def main():
             case 2:
                 lista_data_jugador = obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores)
                 if lista_data_jugador != -1:
-                    nombre_jugador = lista_data_jugador[0]['nombre']
+                    nombre_jugador = lista_data_jugador[0]['nombre'].lower()
                     nombre_jugador = re.sub(r" ", "_", nombre_jugador)
             case 3:
                 if flag_guardar_archivo and lista_data_jugador != -1:
@@ -397,13 +401,7 @@ def main():
                 else:
                     print("Debe haber ingresado la opción 2 anteriormente para poder guardar el archivo")
             case 4:
-                dict_nombre_logros = obtener_jugador_nombre_logros(lista_jugadores)
-                nombre = dict_nombre_logros["nombre"]
-                logros = dict_nombre_logros["logros"]
-                print(f"\nNombre: {nombre}")
-                print("Logros:")
-                for logro in logros:
-                    print(f"{logro} | ", end="")
+                obtener_jugador_nombre_logros(lista_jugadores)
             case 5:
                 calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores)
             case 6:
