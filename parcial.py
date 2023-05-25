@@ -243,6 +243,19 @@ def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
     return dict_nombre_dato
 
 def imprimir_nombre_dato(jugador: dict, key_ingresada: str) -> None:
+    """
+    imprimir_nombre_dato: Esta función toma un diccionario que representa a un jugador y una clave, e imprime el nombre del
+    jugador y el valor asociado con la clave, o imprime el nombre del jugador y los valores asociados
+    con la clave si es un diccionario o una lista.
+
+    Recibe: :param jugador: Diccionario que representa a un jugador, con claves para su nombre y varias estadísticas o logros
+            :param key_ingresada: String que representa la clave o atributo que el usuario quiere recuperar del diccionario del
+                                  jugador
+
+    :return: Si se llama a la función con una entrada no válida (una clave que no pertenece al diccionario como primer argumento o
+    una clave que no existe en el diccionario), devolverá -1. Si la función se llama con éxito,
+    imprimirá información sobre el nombre del jugador y los datos solicitados.
+    """
     if type(jugador) != type(dict()):
         return -1
 
@@ -284,7 +297,7 @@ def solicitar_dato(dato: str) -> str:
 
     Retorna: Un string que es el dato del jugador a buscar o -1 si el usuario se arrepiente de la búsqueda.
     """
-    dato_ingresado = input(f"\nIngrese {dato} del jugador que desea buscar (o ingrese '-1' para salir del submenú): ")
+    dato_ingresado = input(f"\nIngrese un {dato} (o ingrese '-1' para salir del submenú): ")
     return dato_ingresado
 
 def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
@@ -482,6 +495,51 @@ def calcular_imprimir_jugador_mayor_porcentaje_tiros_campo(lista_jugadores: list
     print("Nombre:".ljust(20), "- Porcentaje Tiros de Campo:")
     imprimir_nombre_dato(jugador_mayor_porcentaje_tiros_campo, 'porcentaje_tiros_de_campo')
 
+def calcular_imprimir_jugador_mayor_cantidad_asistencias(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    jugador_mayor_cantidad_asistencias = calcular_max_min_dato(lista_jugadores, 'max', 'asistencias_totales')
+
+    if jugador_mayor_cantidad_asistencias == -1:
+        return -1
+
+    print("Nombre:".ljust(20), "- Asistencias Totales:")
+    imprimir_nombre_dato(jugador_mayor_cantidad_asistencias, 'asistencias_totales')
+
+# Permitir al usuario ingresar un valor y mostrar los jugadores que han promediado más puntos por partido que ese valor.
+def imprimir_jugadores_puntos_por_partido_condicion(lista_jugadores: list, key_ingresada: str) -> list:
+    if not lista_jugadores:
+        return -1
+
+    condicion_valida = False
+
+    while not condicion_valida:
+        valor_ingresado = solicitar_dato('valor')
+        if valor_ingresado == '-1':
+            break
+        condicion_valida = re.search(r'^[0-9]{1,}$|^[0-9]{1,}.[0-9]{1,}$', valor_ingresado)
+        condicion_valida = bool(condicion_valida)
+
+    valor_ingresado = float(valor_ingresado)
+
+    if valor_ingresado == -1:
+        print("\nIngrese una nueva opción del menú")
+        return -1
+
+    lista_mayor = []
+
+    for jugador in lista_jugadores:
+        for valor_jugador in jugador.values():
+            if type(valor_jugador) == type(dict()) and key_ingresada in valor_jugador:
+                if type(valor_jugador[key_ingresada]) == type(int()) or type(valor_jugador[key_ingresada]) == type(float()):
+                        for key, valor in valor_jugador.items():
+                            if key == key_ingresada and valor > valor_ingresado:
+                                lista_mayor.append(jugador)
+                                imprimir_nombre_dato(jugador, 'promedio_puntos_por_partido')
+
+    return lista_mayor
+
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
 y valida la misma.
@@ -502,8 +560,8 @@ def mostrar_menu() -> int:
     print("6. Buscador jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
     print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales.")
     print("8. Calcular y mostrar el jugador con el mayor porcentaje de tiros de campo.")
-    print("9. ")
-    print("10. ")
+    print("9. Calcular y mostrar el jugador con la mayor cantidad de asistencias totales.")
+    print("10. Ingresar un valor y mostrar los jugadores que han promediado más puntos por partido que ese valor.")
     print("11. ")
     print("12. ")
     print("13. ")
@@ -564,9 +622,9 @@ def main():
             case 8:
                 calcular_imprimir_jugador_mayor_porcentaje_tiros_campo(lista_jugadores)
             case 9:
-                pass
+                calcular_imprimir_jugador_mayor_cantidad_asistencias(lista_jugadores)
             case 10:
-                pass
+                imprimir_jugadores_puntos_por_partido_condicion(lista_jugadores, 'promedio_puntos_por_partido')
             case 11:
                 pass
             case 12:
