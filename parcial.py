@@ -33,6 +33,111 @@ def leer_archivo(nombre_archivo: str) -> list:
 
 lista_jugadores = leer_archivo('dt.json')
 
+"""
+calcular_max : Compara entre los elementos de la lista para obtener el dato (diccionario)
+que contiene el mayor valor de la key ingresada por parámetro
+
+Recibe: :param lista: Una lista de diccionarios que contiene datos
+        :param key_ingresada: Hace referencia al dato del que se desea buscar el máximo
+
+Retorna: Un diccionario que contiene los datos del maximo valor encontrado de la key ingresada,
+en caso que se cumpla con las validaciones. Caso contrario retorna -1
+"""
+def calcular_max(lista_jugadores: list, key_ingresada: str) -> dict:
+    if not lista_jugadores:
+        return -1
+
+    i = 0
+    maximo_obtenido = False
+
+    for jugador in lista_jugadores:
+        for key_jugador, valor_jugador in jugador.items():
+            if type(valor_jugador) == type(dict()):
+                if key_ingresada in valor_jugador and not maximo_obtenido:
+                    jugador_maximo = lista_jugadores[i]
+                    maximo = jugador_maximo[key_jugador][key_ingresada]
+                    maximo_obtenido = True
+
+                if maximo_obtenido:
+                    for key, valor in valor_jugador.items():
+                        if key == key_ingresada:
+                            if (valor > maximo):
+                                maximo = valor
+                                jugador_maximo = jugador
+            i += 1
+
+    if not maximo_obtenido:
+        print(f"El dato '{key_ingresada}' no existe en la lista")
+        return -1
+
+    return jugador_maximo
+
+"""
+calcular_min : Compara entre los elementos de la lista para obtener el dato (diccionario)
+que contiene el menor valor de la key ingresada por parámetro
+
+Recibe: :param lista: Una lista de diccionarios que contiene datos
+        :param key_ingresada: Hace referencia al dato del que se desea buscar el mínimo
+
+Retorna: Un diccionario que contiene los datos del mínimo valor encontrado de la key ingresada,
+en caso que se cumpla con las validaciones. Caso contrario retorna -1
+"""
+def calcular_min(lista: list, key_ingresada: str) -> dict:
+    if not lista:
+        return -1
+
+    i = 0
+    minimo_obtenido = False
+
+    for dato in lista:
+        if key_ingresada in dato and not minimo_obtenido:
+            dato_minimo = dato
+            minimo = dato_minimo[key_ingresada]
+            minimo_obtenido = True
+
+        if minimo_obtenido:
+            for key, valor in dato.items():
+                if key == key_ingresada:
+                    if (valor < minimo):
+                        minimo = valor
+                        dato_minimo = dato
+        i += 1
+
+    if not minimo_obtenido:
+        print(f"El dato '{key_ingresada}' no existe en la lista")
+        return -1
+
+    return dato_minimo
+
+"""
+calcular_max_min_dato : Verifica que el calculo recibido sea 'maximo' o 'minimo' para llamar
+a las funciones 'calcular_max' o 'calcular_min' respectivamente y obtener el valor deseado
+de la key ingresada por parámetro.
+
+Recibe: :param lista: Una lista de diccionarios que contiene datos
+        :param calculo: Hace refencia al cálculo que se desea buscar, el mismo puede ser 'maximo'
+                        o 'minimo'.
+        :param key_ingresada: Hace referencia al dato del que se desea buscar el mínimo
+
+Retorna: Un diccionario que contiene los datos del calculo y key deseados en caso que se cumpla
+con las validaciones. Caso contrario retorna -1
+"""
+def calcular_max_min_dato(lista_jugadores: list, calculo: str, key_ingresada: str) -> dict:
+    if not lista_jugadores:
+        return -1
+
+    calculo_valido = re.search(r'max|min', calculo)
+    if bool(calculo_valido):
+        if calculo == 'max':
+            dato_dict = calcular_max(lista_jugadores, key_ingresada)
+        else:
+            dato_dict = calcular_min(lista_jugadores, key_ingresada)
+    else:
+        print(f"El calculo {calculo} no es válido")
+        return -1
+
+    return dato_dict
+
 def calcular_promedio(lista_jugadores: list, key_ingresada: str) -> float:
     """
     calcular_promedio : Suma los valores de la key ingresada por parámetro y acumula la cantidad de
@@ -327,7 +432,7 @@ def obtener_jugador_nombre_logros(lista_jugadores: list) -> dict:
             if condicion_valida:
                 return jugador
 
-def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> float:
+def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> None:
     if not lista_jugadores:
         return -1
 
@@ -340,9 +445,7 @@ def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> fl
 
     print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
 
-# Permitir al usuario ingresar el nombre de un jugador y mostrar si ese jugador
-# es miembro del Salón de la Fama del Baloncesto.
-def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> dict:
+def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> None:
     jugador = obtener_jugador_nombre_logros(lista_jugadores)
     if type(jugador) != type(dict()):
         return -1
@@ -354,6 +457,18 @@ def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> dict:
         pertenece_salon_fama = True
 
     print(f"{nombre}".ljust(20), f"- {pertenece_salon_fama}")
+
+def calcular_imprimir_jugador_mayor_cantidad_rebotes(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    jugador_mayor_cantidad_rebotes = calcular_max_min_dato(lista_jugadores, 'max', 'rebotes_totales')
+
+    if jugador_mayor_cantidad_rebotes == -1:
+        return -1
+
+    print("Nombre:".ljust(20), "- Rebotes Totales:")
+    imprimir_nombre_dato(jugador_mayor_cantidad_rebotes, 'rebotes_totales')
 
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
@@ -373,7 +488,7 @@ def mostrar_menu() -> int:
     print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team,")
     print("   ordenado por nombre de manera ascendente.")
     print("6. Buscador jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
-    print("7. ")
+    print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales.")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
     print("\n----------------------------------------------------")
@@ -419,7 +534,7 @@ def main():
             case 6:
                 imprimir_jugador_nombre_salon_fama(lista_jugadores)
             case 7:
-                pass
+                calcular_imprimir_jugador_mayor_cantidad_rebotes(lista_jugadores)
             case 8:
                 pass
             case 0:
