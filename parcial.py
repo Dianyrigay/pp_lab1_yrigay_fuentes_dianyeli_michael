@@ -14,96 +14,121 @@ import re
 import json
 import csv
 
-"""
-leer_archivo: Carga los datos del archivo json, almacenandolos en una lista. El modo de apertura
-del archivo es de solo lectura
 
-Recibe: :param nombre_archivo: String que contiene la ruta y nombre del archivo que se desea leer.
-
-Retorna: La lista obtenida del archivo json
-"""
 def leer_archivo(nombre_archivo: str) -> list:
-  lista = []
+    """
+    leer_archivo: Carga los datos del archivo json, almacenandolos en una lista. El modo de apertura
+    del archivo es de solo lectura
 
-  with open(nombre_archivo) as archivo:
-      data = json.load(archivo)
-      lista = data["jugadores"]
-  return lista
+    Recibe: :param nombre_archivo: String que contiene la ruta y nombre del archivo que se desea leer.
+
+    Retorna: La lista obtenida del archivo json
+    """
+    lista = []
+
+    with open(nombre_archivo) as archivo:
+        data = json.load(archivo)
+        lista = data["jugadores"]
+    return lista
 
 lista_jugadores = leer_archivo('dt.json')
 
-def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> str:
+def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
+    """
+    obtener_nombre_dato: Obtiene el nombre del jugador y el valor de la key ingresada.
+
+    Recibe: :param jugador: Diccionario que contiene los datos de un jugador.
+            :param key_ingresada: String que hace referencia al dato del que se desea obtener el valor.
+
+    Retorna: Un diccionario que contiene como keys el nombre y el dato pasado por parametro, si el jugador es
+    de tipo 'dict'; caso contrario retorna -1.
+    """
+    dict_nombre_dato = {}
+
+    if type(jugador) != type(dict()):
+        return -1
+    
+    if 'nombre' not in jugador and key_ingresada not in jugador:
+        return -1
+    
+    dict_nombre_dato["nombre"] = jugador["nombre"]
+    dict_nombre_dato[key_ingresada] = jugador[key_ingresada]
+    return dict_nombre_dato
+    
+    
+    
+def solicitar_dato(dato: str) -> str:
+    """
+    solicitar_dato: Solicita al usuario por consola que ingrese un dato de un jugador.
+
+    Recibe :param dato: String que hace referencia al dato que el usuario debe ingresar.
+
+    Retorna: Un string que es el dato del jugador a buscar o -1 si el usuario se arrepiente de la búsqueda.
+    """
+    dato_ingresado = input(f"\nIngrese {dato} del jugador que desea buscar (o ingrese '-1' para salir del submenú): ")
+    return dato_ingresado
+
+def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
+    """
+    imprimir_jugadores_posicion: Imprime por consola los nombres de los jugadores y la posición de los mismos.
+
+    Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
+
+    No retorna datos.
+    """
     if not lista_jugadores:
         return -1
-
-    if 'nombre' in jugador and key_ingresada in jugador:
-        nombre = jugador["nombre"]
-        dato = jugador[key_ingresada]
-        mensaje = f"{nombre} - {dato}"
-        return mensaje
-
-def obtener_jugadores_posicion(lista_jugadores: list) -> None:
+    
+    print("Nombre:".ljust(20), "- Posición:")
     for jugador in lista_jugadores:
-        print(obtener_nombre_dato(jugador, 'posicion'))
+        dict_nombre_posicion = obtener_nombre_dato(jugador, 'posicion')
+        if dict_nombre_posicion == -1:
+            print(f"El jugador no es válido para realizar esta operación")
+            return -1
+        nombre = dict_nombre_posicion["nombre"]
+        posicion = dict_nombre_posicion['posicion']
+        print(nombre.ljust(20), "-", posicion)
 
-"""
-solicitar_indice: Muestra al usuario la lista de indices con los nombres de los jugadores y solicita que
-ingrese un índice, validando el mismo.
 
-Recibe :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores
+def imprimir_nombre_indice(lista_jugadores: list) -> None:
+    """
+    imprimir_nombre_indice: Imprime en consola los nombres de los jugadores y el indice de los mismos
+    si la lista no está vacía, sino imprime que la misma esta vacía.
 
-Retorna: Un entero que es el índice ingresado si es válido, caso contrario retorna -1.
-"""
-def solicitar_condicion(lista_jugadores: list, condicion: str):
-    condicion_valida = False
-    primer_ingreso = True
+    Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
 
+    No retorna datos.
+    """
     if not lista_jugadores:
-        return -1
-
-
-    while not condicion_valida:
-        if primer_ingreso:
-            obtener_nombre_indice(lista_jugadores)
-            condicion_ingresada = input(f"\nIngrese {condicion} del jugador que desea buscar: ")
-            primer_ingreso = False
-
-        if condicion == 'indice':
-            regex = r'^[0-11]+$'
-            condicion_valida = re.search(regex, condicion_ingresada)
-            condicion_valida = bool(condicion_valida)
-            if not condicion_valida:
-              condicion_ingresada = input("El indice es inválido, intente nuevamente o presione 's' para salir: ")
-            if condicion_ingresada == 's':
-                return -1
-
-    return condicion_ingresada
-
-def solicitar_condicion(condicion: str) -> str:
-    condicion_ingresada = input(f"\nIngrese {condicion} del jugador que desea buscar (o ingrese '-1' para salir): ")
-    return condicion_ingresada
-
-def obtener_nombre_indice(lista_jugadores: list) -> None:
-    if not lista_jugadores:
-        return -1
+        print("Lista vacía")
 
     indice = 0
     for jugador in lista_jugadores:
         if 'nombre' in jugador:
-            nombre = jugador["nombre"]
-        mensaje = f"{indice} - {nombre}"
+            nombre = jugador['nombre']
+        mensaje = f"\t{indice} - {nombre}"
         indice += 1
         print(mensaje)
 
-def obtener_nombre_estadisticas(lista_jugadores: list):
+def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
+    """
+    obtener_e_imprimir_jugador_nombre_estadisticas: Reutiliza la función 'imprimir_nombre_indice' 
+    y 'solicitar_dato' para solicita al usuario que ingrese el índice de un jugador, almacena el nombre
+    y las estadisticas en una lista e imprime estos datos en consola.
+
+    Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
+
+    Retorna: Una lista que contiene el nombre y las estadisticas del jugador solicitado. 
+             -1 si la lista esta vacía o en caso de que el usuario no desee continuar con la búsqueda.
+    """
     if not lista_jugadores:
         return -1
 
     condicion_valida = False
-    obtener_nombre_indice(lista_jugadores)
+    imprimir_nombre_indice(lista_jugadores)
 
     while not condicion_valida:
-        indice_jugador = solicitar_condicion('indice')
+        indice_jugador = solicitar_dato('indice')
         if indice_jugador == '-1':
             break
         regex = r'^[0-11]+$'
@@ -113,90 +138,79 @@ def obtener_nombre_estadisticas(lista_jugadores: list):
     indice_jugador = int(indice_jugador)
 
     if indice_jugador == -1:
-        mensaje = "\nIngrese una nueva opción del menú"
-        return print(mensaje)
+        print("\nIngrese una nueva opción del menú")
+        return -1
 
     indice = 0
     for jugador in lista_jugadores:
         if indice_jugador == indice:
-          print(obtener_nombre_dato(jugador, 'estadisticas'))
+            nombre = jugador['nombre']
+
+            dict_data_jugador = {}
+            print(f"\nNombre: {nombre}")
+            for dato,valor in jugador.items():
+                if dato == 'estadisticas':
+                    print("Estadísticas:")
+                    for estadistica, valor_estadistica in valor.items():
+                        dict_data_jugador[estadistica] = valor_estadistica
+                        print(f"{estadistica} : {valor_estadistica} | ", end="")
+                elif dato != "logros":
+                    dict_data_jugador[dato] = valor
+            print("\n")
+            lista_data_jugador = [dict_data_jugador]
         indice += 1
+    
+    return lista_data_jugador
 
-# Después de mostrar las estadísticas de un jugador seleccionado por el usuario, permite al usuario
-# guardar las estadísticas de ese jugador en un archivo CSV. El archivo CSV debe contener los
-# siguientes campos: nombre, posición, temporadas, puntos totales, promedio de puntos por partido,
-# rebotes totales, promedio de rebotes por partido, asistencias totales, promedio de asistencias por
-# partido, robos totales, bloqueos totales, porcentaje de tiros de campo, porcentaje de tiros libres y
-# porcentaje de tiros triples.
+def exportar_csv(nombre_archivo: str, data_jugador: list):
+    archivo_guardado = False
+    if data_jugador:
+        with open(nombre_archivo, 'w', newline='') as archivo:
+            writer = csv.writer(archivo)
 
-def obtener_nombre_logros(lista_jugadores: list):
+            encabezados = data_jugador[0].keys()
+            writer.writerow(encabezados)
+
+            for dato in data_jugador:
+                valores = dato.values()
+                writer.writerow(valores)
+            archivo_guardado = True
+
+    if archivo_guardado:
+        print(f"Se creó el archivo: {nombre_archivo}")
+    else:
+        print(f"Error al crear el archivo: {nombre_archivo}")
+
+    return archivo_guardado
+
+
+def imprimir_jugador_nombre_logros(lista_jugadores: list):
     if not lista_jugadores:
         return -1
 
     condicion_valida = False
-    obtener_nombre_indice(lista_jugadores)
+    imprimir_nombre_indice(lista_jugadores)
 
     while not condicion_valida:
-        nombre_buscado = solicitar_condicion('nombre')
+        nombre_buscado = solicitar_dato('nombre')
 
         if nombre_buscado == '-1':
             mensaje = "\nIngrese una nueva opción del menú"
             return print(mensaje)
 
         nombre_buscado = nombre_buscado.lower()
-        regex = r'\b'+ nombre_buscado + r'\b'
+        regex = r'\b'+ nombre_buscado + r'\b'+ r'|\b[a-zA-Z]{1,}'+ nombre_buscado + r'\b'+ r'|\b'+ nombre_buscado + r'+[a-zA-Z]{1,}\b'
         for jugador in lista_jugadores:
             nombre_jugador = jugador['nombre'].lower()
             condicion_valida = re.search(regex, nombre_jugador)
-            if bool(condicion_valida):
-                return print(obtener_nombre_dato(jugador,'logros'))
+            condicion_valida = bool(condicion_valida)
+            if condicion_valida:
+                dict_nombre_logros = obtener_nombre_dato(jugador,'logros')
+                return dict_nombre_logros
+                
 
 # Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por
 # nombre de manera ascendente.
-
-"""
-quick_sort: Ordena una lista de diccionarios por el dato 'key' pasado por parámetro de
-forma ascendente por defecto o descendente si se desea.
-
-Recibe: :param lista: Una lista de diccionarios que contiene datos
-        :param key: String que representa la key por la que se desea ordenar la lista
-        :param ascendente: Booleano que indica si el ordenamiento debe ser ascendente o
-                           descendente (por defecto es True)
-
-Retorna: Una lista de diccionarios ordenada si se cumple con las validaciones, caso contrario
-retorna -1.
-"""
-def quick_sort(lista_jugadores:list, key: str, ascendente:bool = True)->list:
-    i = 0
-    lista_de = []
-    lista_iz = []
-    if(len(lista_jugadores)<=1):
-        return lista_jugadores
-
-    pivot_encontrado = False
-    while not pivot_encontrado:
-      if key in lista_jugadores[i]:
-          pivot = lista_jugadores[i]
-          pivot_encontrado = True
-      i += 1
-
-    for dato in lista_jugadores[i:]:
-        if key in dato and key in pivot:
-            if ascendente and dato[key] > pivot[key] or \
-               not ascendente and dato[key] < pivot[key]:
-                lista_de.append(dato)
-            else:
-                lista_iz.append(dato)
-
-    lista_iz = quick_sort(lista_iz, key, ascendente)
-    lista_iz.append(pivot)
-    lista_de = quick_sort(lista_de, key, ascendente)
-
-    lista_iz.extend(lista_de)
-    lista_ordenada = lista_iz
-    return lista_ordenada
-
-
 
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
@@ -207,18 +221,18 @@ No recibe parámetros.
 Retorna: Un entero que es la opción ingresada si es válida, caso contrario retorna -1.
 """
 def mostrar_menu() -> int:
-    print("----------------------------------------------------")
+    print("\n----------------------------------------------------")
     print("Menú de opciones:")
     print("1. Mostrar la lista de todos los jugadores del Dream Team.")
-    print("2. Buscar jugador por índice y mostrar sus estadísticas completas")
-    print("3. ")
-    print("4. Buscar jugador por nombre y mostrar sus logros")
+    print("2. Buscar jugador por índice y mostrar sus estadísticas completas.")
+    print("3. Exportar archivo CSV con las estadisticas del jugador del punto 2.")
+    print("4. Buscar jugador por nombre y mostrar sus logros.")
     print("5. ")
     print("6. ")
     print("7. ")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
-    print("----------------------------------------------------")
+    print("\n----------------------------------------------------")
     opcion_valida = re.search(r'^[1-9]$|^1[0-9]$|^20$', opcion)
     if not bool(opcion_valida):
         return -1
@@ -242,16 +256,25 @@ def main():
             flag_guardar_archivo = True
         match opcion:
             case 1:
-                obtener_jugadores_posicion(lista_jugadores)
+                imprimir_jugadores_posicion(lista_jugadores)
             case 2:
-                obtener_nombre_estadisticas(lista_jugadores)
+                lista_data_jugador = obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores)
+                if lista_data_jugador != -1:
+                    nombre_jugador = lista_data_jugador[0]['nombre']
+                    nombre_jugador = re.sub(r" ", "_", nombre_jugador)
             case 3:
-                if flag_guardar_archivo:
-                    pass
+                if flag_guardar_archivo and lista_data_jugador != -1:
+                    exportar_csv(f'jugador_{nombre_jugador}.csv', lista_data_jugador)
                 else:
                     print("Debe haber ingresado la opción 2 anteriormente para poder guardar el archivo")
             case 4:
-                obtener_nombre_logros(lista_jugadores)
+                dict_nombre_logros = imprimir_jugador_nombre_logros(lista_jugadores)
+                nombre = dict_nombre_logros["nombre"]
+                logros = dict_nombre_logros["logros"]
+                print(f"\nNombre: {nombre}")
+                print("Logros:")
+                for logro in logros:
+                    print(f"{logro} | ", end="")
             case 5:
                 pass
             case 6:
