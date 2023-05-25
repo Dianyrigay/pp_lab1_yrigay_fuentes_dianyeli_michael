@@ -164,12 +164,12 @@ def imprimir_nombre_dato(jugador: dict, key_ingresada: str) -> None:
         print("\nNombre: ".ljust(20), nombre)
         print("Estadísticas:")
         for key, valor in dato.items():
-            print(" ".ljust(20),f"{key.capitalize()}: ", valor)
+            print("".ljust(20),f"{key.capitalize()}: ", valor)
     if type(dato) == type(list()):
         print("\nNombre: ".ljust(20), nombre)
         print("Logros:")
         for elemento in dato:
-            print(" ".ljust(20),f"{elemento.capitalize()}")
+            print("".ljust(20),f"{elemento.capitalize()}")
 
 def solicitar_dato(dato: str) -> str:
     """
@@ -217,7 +217,7 @@ def imprimir_nombre_indice(lista_jugadores: list) -> None:
         indice += 1
         print(mensaje)
 
-def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
+def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list) -> list:
     """
     obtener_e_imprimir_jugador_nombre_estadisticas: Reutiliza la función 'imprimir_nombre_indice'
     y 'solicitar_dato' para solicitar al usuario que ingrese el índice de un jugador, almacena el nombre,
@@ -263,7 +263,7 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
 
     return lista_data_jugador
 
-def exportar_csv(nombre_archivo: str, data_jugador: list):
+def exportar_csv(nombre_archivo: str, data_jugador: list) -> bool:
     """
     exportar_csv: Escribe un archivo csv y si ya existe lo sobreescribe, con los datos de la lista que haya
     recibido por parámetro, valida si se creo el archivo correctamente.
@@ -294,7 +294,7 @@ def exportar_csv(nombre_archivo: str, data_jugador: list):
 
     return archivo_guardado
 
-def obtener_jugador_nombre_logros(lista_jugadores: list):
+def obtener_jugador_nombre_logros(lista_jugadores: list) -> dict:
     """
     obtener_jugador_nombre_logros: Reutiliza la función 'imprimir_nombre_indice'
     y 'solicitar_dato' para solicitar al usuario que ingrese el nombre de un jugador, usando
@@ -325,12 +325,8 @@ def obtener_jugador_nombre_logros(lista_jugadores: list):
             condicion_valida = re.search(regex, nombre_jugador)
             condicion_valida = bool(condicion_valida)
             if condicion_valida:
-                dict_nombre_logros = obtener_nombre_dato(jugador,'logros')
-                imprimir_nombre_dato(jugador,'logros')
-                return dict_nombre_logros
+                return jugador
 
-# Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por
-# nombre de manera ascendente.
 def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> float:
     if not lista_jugadores:
         return -1
@@ -343,6 +339,21 @@ def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> fl
         imprimir_nombre_dato(jugador, 'promedio_puntos_por_partido')
 
     print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
+
+# Permitir al usuario ingresar el nombre de un jugador y mostrar si ese jugador
+# es miembro del Salón de la Fama del Baloncesto.
+def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> dict:
+    jugador = obtener_jugador_nombre_logros(lista_jugadores)
+    if type(jugador) != type(dict()):
+        return -1
+
+    pertenece_salon_fama = False
+    print("Nombre:".ljust(20),"- Miembro del Salon de la Fama del Baloncesto:")
+    if 'Miembro del Salon de la Fama del Baloncesto' in jugador['logros']:
+        nombre = jugador["nombre"]
+        pertenece_salon_fama = True
+
+    print(f"{nombre}".ljust(20), f"- {pertenece_salon_fama}")
 
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
@@ -360,8 +371,8 @@ def mostrar_menu() -> int:
     print("3. Exportar archivo CSV con las estadisticas del jugador del punto 2.")
     print("4. Buscar jugador por nombre y mostrar sus logros.")
     print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team,")
-    print("   ordenado por nombre de manera ascendente")
-    print("6. ")
+    print("   ordenado por nombre de manera ascendente.")
+    print("6. Buscador jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
     print("7. ")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
@@ -401,11 +412,12 @@ def main():
                 else:
                     print("Debe haber ingresado la opción 2 anteriormente para poder guardar el archivo")
             case 4:
-                obtener_jugador_nombre_logros(lista_jugadores)
+                jugador = obtener_jugador_nombre_logros(lista_jugadores)
+                imprimir_nombre_dato(jugador,'logros')
             case 5:
                 calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores)
             case 6:
-                pass
+                imprimir_jugador_nombre_salon_fama(lista_jugadores)
             case 7:
                 pass
             case 8:
