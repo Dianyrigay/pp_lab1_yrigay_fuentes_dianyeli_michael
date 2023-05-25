@@ -470,6 +470,18 @@ def calcular_imprimir_jugador_mayor_cantidad_rebotes(lista_jugadores: list) -> N
     print("Nombre:".ljust(20), "- Rebotes Totales:")
     imprimir_nombre_dato(jugador_mayor_cantidad_rebotes, 'rebotes_totales')
 
+def calcular_imprimir_jugador_mayor_porcentaje_tiros_campo(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    jugador_mayor_porcentaje_tiros_campo = calcular_max_min_dato(lista_jugadores, 'max', 'porcentaje_tiros_de_campo')
+
+    if jugador_mayor_porcentaje_tiros_campo == -1:
+        return -1
+
+    print("Nombre:".ljust(20), "- Porcentaje Tiros de Campo:")
+    imprimir_nombre_dato(jugador_mayor_porcentaje_tiros_campo, 'porcentaje_tiros_de_campo')
+
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
 y valida la misma.
@@ -489,6 +501,20 @@ def mostrar_menu() -> int:
     print("   ordenado por nombre de manera ascendente.")
     print("6. Buscador jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
     print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales.")
+    print("8. Calcular y mostrar el jugador con el mayor porcentaje de tiros de campo.")
+    print("9. ")
+    print("10. ")
+    print("11. ")
+    print("12. ")
+    print("13. ")
+    print("14. ")
+    print("15. ")
+    print("16. ")
+    print("17. ")
+    print("18. ")
+    print("19. ")
+    print("20. ")
+    print("23. ")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
     print("\n----------------------------------------------------")
@@ -536,6 +562,32 @@ def main():
             case 7:
                 calcular_imprimir_jugador_mayor_cantidad_rebotes(lista_jugadores)
             case 8:
+                calcular_imprimir_jugador_mayor_porcentaje_tiros_campo(lista_jugadores)
+            case 9:
+                pass
+            case 10:
+                pass
+            case 11:
+                pass
+            case 12:
+                pass
+            case 13:
+                pass
+            case 14:
+                pass
+            case 15:
+                pass
+            case 16:
+                pass
+            case 17:
+                pass
+            case 18:
+                pass
+            case 19:
+                pass
+            case 20:
+                pass
+            case 23:
                 pass
             case 0:
                 break
