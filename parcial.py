@@ -33,21 +33,18 @@ def leer_archivo(nombre_archivo: str) -> list:
 
 lista_jugadores = leer_archivo('dt.json')
 
-def calcular_promedio(lista_jugadores: list, key_a_calcular: str, type_key_jugador: type = type(str())) -> float:
+def calcular_promedio(lista_jugadores: list, key_ingresada: str) -> float:
     """
     calcular_promedio : Suma los valores de la key ingresada por parámetro y acumula la cantidad de
     veces que aparece esa key en la lista para obtener el promedio de los valores de la key.
 
     Recibe: :param lista: Una lista de diccionarios que contiene datos de jugadores
-            :param key_a_calcular: Hace referencia al dato del que se desea buscar el promedio
+            :param key_ingresada: Hace referencia al dato del que se desea buscar el promedio
 
     Retorna: Un float que es el promedio obtenido en caso que se cumpla con las validaciones.
     Caso contrario retorna -1
     """
     if not lista_jugadores:
-        return -1
-    
-    if type_key_jugador != type:
         return -1
 
     promedio = 0
@@ -55,27 +52,21 @@ def calcular_promedio(lista_jugadores: list, key_a_calcular: str, type_key_jugad
     cantidad_key_en_lista = 0
 
     for jugador in lista_jugadores:
-        if type_key_jugador == type(str()):
-            if key_a_calcular in jugador and \
-                (type(jugador[key_a_calcular]) == type(int()) or type(jugador[key_a_calcular]) == type(float())):
-                for key, valor in jugador.items():
-                    if key == key_a_calcular:
-                        suma_valores += valor
+        for dato_jugador, valor_jugador in jugador.items():
+            if type(valor_jugador) == type(str()) and key_ingresada in jugador:
+                if type(jugador[key_ingresada]) == type(int()) or type(jugador[key_ingresada]) == type(float()):
+                    if key == key_ingresada:
+                        suma_valores += valor_jugador
                         cantidad_key_en_lista += 1
-        elif type_key_jugador == type(dict()):
-            estadisticas = jugador['estadisticas']
-            if key_a_calcular in estadisticas and \
-                (type(estadisticas[key_a_calcular]) == type(int()) or type(estadisticas[key_a_calcular]) == type(float())):
-                for key, valor in estadisticas.items():
-                    if key == key_a_calcular:
-                        suma_valores += valor
-                        cantidad_key_en_lista += 1
-        elif type_key_jugador == type(list()):
-            #TODO completar
-            print('valor key is list')
+            if type(valor_jugador) == type(dict()) and key_ingresada in valor_jugador:
+                if type(valor_jugador[key_ingresada]) == type(int()) or type(valor_jugador[key_ingresada]) == type(float()):
+                        for key, valor in valor_jugador.items():
+                            if key == key_ingresada:
+                                suma_valores += valor
+                                cantidad_key_en_lista += 1
 
     if cantidad_key_en_lista == 0:
-        print(f"El dato '{key_a_calcular}' no se encuentra o no es válido para realizar la operación")
+        print(f"El dato '{key_ingresada}' no se encuentra o no es válido para realizar la operación")
         return -1
 
     promedio = suma_valores / cantidad_key_en_lista
@@ -138,33 +129,39 @@ def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
 
     if type(jugador) != type(dict()):
         return -1
-    
+
     if 'nombre' not in jugador and key_ingresada not in jugador:
         return -1
-    
+
     dict_nombre_dato["nombre"] = jugador["nombre"]
     dict_nombre_dato[key_ingresada] = jugador[key_ingresada]
     return dict_nombre_dato
-    
-def imprimir_nombre_dato(jugador: dict, key_ingresada: str, type_key_jugador:type = type(str())) -> None:
-    #TODO ver si puedo hacer que si el valor de la key es string, imprimir de una forma
-    #sino si es list o dict imprimir de otra forma
+
+def imprimir_nombre_dato(jugador: dict, key_ingresada: str) -> None:
     if type(jugador) != type(dict()):
         return -1
-    
-    if type_key_jugador != type:
+
+    if 'nombre' not in jugador:
         return -1
-    
+
     nombre = jugador["nombre"]
-    if type_key_jugador == type(str()):
-        dato = jugador[key_ingresada]
-    elif type_key_jugador == type(dict()):
-        estadisticas = jugador["estadisticas"]
-        dato = estadisticas[key_ingresada]
-    
+    for dato_jugador, valor_jugador in jugador.items():
+        if key_ingresada in jugador:
+            if type(valor_jugador) == type(str()):
+                dato = jugador[key_ingresada]
+
+        if key_ingresada in valor_jugador:
+            if type(valor_jugador) == type(dict()):
+                for key, valor in valor_jugador.items():
+                    if key == key_ingresada:
+                        dato = valor
+            if type(valor_jugador) == type(list()):
+                for elemento in valor_jugador.items():
+                    dato = elemento
+
     print(nombre.ljust(20), "-", dato)
 
-    
+
 def solicitar_dato(dato: str) -> str:
     """
     solicitar_dato: Solicita al usuario por consola que ingrese un dato de un jugador.
@@ -186,7 +183,7 @@ def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
     """
     if not lista_jugadores:
         return -1
-    
+
     print("Nombre:".ljust(20), "- Posición:")
     for jugador in lista_jugadores:
         imprimir_nombre_dato(jugador, 'posicion')
@@ -213,13 +210,13 @@ def imprimir_nombre_indice(lista_jugadores: list) -> None:
 
 def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
     """
-    obtener_e_imprimir_jugador_nombre_estadisticas: Reutiliza la función 'imprimir_nombre_indice' 
+    obtener_e_imprimir_jugador_nombre_estadisticas: Reutiliza la función 'imprimir_nombre_indice'
     y 'solicitar_dato' para solicitar al usuario que ingrese el índice de un jugador, almacena el nombre,
     la posición y las estadisticas en una lista e imprime estos datos en consola.
 
     Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
 
-    Retorna: Una lista que contiene el nombre, posición y las estadisticas del jugador solicitado. 
+    Retorna: Una lista que contiene el nombre, posición y las estadisticas del jugador solicitado.
              -1 si la lista esta vacía o en caso de que el usuario no desee continuar con la búsqueda.
     """
     if not lista_jugadores:
@@ -260,7 +257,7 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
             print("\n")
             lista_data_jugador = [dict_data_jugador]
         indice += 1
-    
+
     return lista_data_jugador
 
 def exportar_csv(nombre_archivo: str, data_jugador: list):
@@ -296,13 +293,13 @@ def exportar_csv(nombre_archivo: str, data_jugador: list):
 
 def obtener_jugador_nombre_logros(lista_jugadores: list):
     """
-    obtener_jugador_nombre_logros: Reutiliza la función 'imprimir_nombre_indice' 
+    obtener_jugador_nombre_logros: Reutiliza la función 'imprimir_nombre_indice'
     y 'solicitar_dato' para solicitar al usuario que ingrese el nombre de un jugador, usando
     la función 'obtener_nombre_dato' guarda el nombre y los logros en un diccionario.
 
     Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
 
-    Retorna: Un diccionario que contiene el nombre y los logros del jugador solicitado. 
+    Retorna: Un diccionario que contiene el nombre y los logros del jugador solicitado.
              -1 si la lista esta vacía o en caso de que el usuario no desee continuar con la búsqueda.
     """
     if not lista_jugadores:
@@ -333,14 +330,14 @@ def obtener_jugador_nombre_logros(lista_jugadores: list):
 def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> float:
     if not lista_jugadores:
         return -1
-    
-    promedio_equipo = calcular_promedio(lista_jugadores, 'promedio_puntos_por_partido', type(dict()))
+
+    promedio_equipo = calcular_promedio(lista_jugadores, 'promedio_puntos_por_partido')
 
     lista_ordenada_nombres = quick_sort(lista_jugadores, 'nombre')
     print("Nombre:".ljust(20), "- Promedio puntos por partido:")
     for jugador in lista_ordenada_nombres:
-        imprimir_nombre_dato(jugador, 'promedio_puntos_por_partido', type(dict()))
-    
+        imprimir_nombre_dato(jugador, 'promedio_puntos_por_partido')
+
     print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
 
 """
