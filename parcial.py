@@ -33,6 +33,97 @@ def leer_archivo(nombre_archivo: str) -> list:
 
 lista_jugadores = leer_archivo('dt.json')
 
+def calcular_promedio(lista_jugadores: list, key_a_calcular: str, type_key_jugador: type = type(str())) -> float:
+    """
+    calcular_promedio : Suma los valores de la key ingresada por parámetro y acumula la cantidad de
+    veces que aparece esa key en la lista para obtener el promedio de los valores de la key.
+
+    Recibe: :param lista: Una lista de diccionarios que contiene datos de jugadores
+            :param key_a_calcular: Hace referencia al dato del que se desea buscar el promedio
+
+    Retorna: Un float que es el promedio obtenido en caso que se cumpla con las validaciones.
+    Caso contrario retorna -1
+    """
+    if not lista_jugadores:
+        return -1
+    
+    if type_key_jugador != type:
+        return -1
+
+    promedio = 0
+    suma_valores = 0
+    cantidad_key_en_lista = 0
+
+    for jugador in lista_jugadores:
+        if type_key_jugador == type(str()):
+            if key_a_calcular in jugador and \
+                (type(jugador[key_a_calcular]) == type(int()) or type(jugador[key_a_calcular]) == type(float())):
+                for key, valor in jugador.items():
+                    if key == key_a_calcular:
+                        suma_valores += valor
+                        cantidad_key_en_lista += 1
+        elif type_key_jugador == type(dict()):
+            estadisticas = jugador['estadisticas']
+            if key_a_calcular in estadisticas and \
+                (type(estadisticas[key_a_calcular]) == type(int()) or type(estadisticas[key_a_calcular]) == type(float())):
+                for key, valor in estadisticas.items():
+                    if key == key_a_calcular:
+                        suma_valores += valor
+                        cantidad_key_en_lista += 1
+        elif type_key_jugador == type(list()):
+            #TODO completar
+            print('valor key is list')
+
+    if cantidad_key_en_lista == 0:
+        print(f"El dato '{key_a_calcular}' no se encuentra o no es válido para realizar la operación")
+        return -1
+
+    promedio = suma_valores / cantidad_key_en_lista
+
+    return promedio
+
+def quick_sort(lista:list, key: str, ascendente:bool = True)->list:
+    """
+    quick_sort: Ordena una lista de diccionarios por el dato 'key' pasado por parámetro de
+    forma ascendente por defecto o descendente si se desea.
+
+    Recibe: :param lista: Una lista de diccionarios que contiene datos
+            :param key: String que representa la key por la que se desea ordenar la lista
+            :param ascendente: Booleano que indica si el ordenamiento debe ser ascendente o
+                            descendente (por defecto es True)
+
+    Retorna: Una lista de diccionarios ordenada si se cumple con las validaciones, caso contrario
+    retorna -1.
+    """
+    i = 0
+    lista_de = []
+    lista_iz = []
+    if(len(lista)<=1):
+        return lista
+
+    pivot_encontrado = False
+    while not pivot_encontrado:
+      if key in lista[i]:
+          pivot = lista[i]
+          pivot_encontrado = True
+      i += 1
+
+    for dato in lista[i:]:
+        if key in dato and key in pivot:
+            if ascendente and dato[key] > pivot[key] or \
+               not ascendente and dato[key] < pivot[key]:
+                lista_de.append(dato)
+            else:
+                lista_iz.append(dato)
+
+    lista_iz = quick_sort(lista_iz, key, ascendente)
+    lista_iz.append(pivot)
+    lista_de = quick_sort(lista_de, key, ascendente)
+
+    lista_iz.extend(lista_de)
+    lista_ordenada = lista_iz
+    return lista_ordenada
+
 def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
     """
     obtener_nombre_dato: Obtiene el nombre del jugador y el valor de la key ingresada.
@@ -55,7 +146,24 @@ def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
     dict_nombre_dato[key_ingresada] = jugador[key_ingresada]
     return dict_nombre_dato
     
+def imprimir_nombre_dato(jugador: dict, key_ingresada: str, type_key_jugador:type = type(str())) -> None:
+    #TODO ver si puedo hacer que si el valor de la key es string, imprimir de una forma
+    #sino si es list o dict imprimir de otra forma
+    if type(jugador) != type(dict()):
+        return -1
     
+    if type_key_jugador != type:
+        return -1
+    
+    nombre = jugador["nombre"]
+    if type_key_jugador == type(str()):
+        dato = jugador[key_ingresada]
+    elif type_key_jugador == type(dict()):
+        estadisticas = jugador["estadisticas"]
+        dato = estadisticas[key_ingresada]
+    
+    print(nombre.ljust(20), "-", dato)
+
     
 def solicitar_dato(dato: str) -> str:
     """
@@ -81,14 +189,7 @@ def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
     
     print("Nombre:".ljust(20), "- Posición:")
     for jugador in lista_jugadores:
-        dict_nombre_posicion = obtener_nombre_dato(jugador, 'posicion')
-        if dict_nombre_posicion == -1:
-            print(f"El jugador no es válido para realizar esta operación")
-            return -1
-        nombre = dict_nombre_posicion["nombre"]
-        posicion = dict_nombre_posicion['posicion']
-        print(nombre.ljust(20), "-", posicion)
-
+        imprimir_nombre_dato(jugador, 'posicion')
 
 def imprimir_nombre_indice(lista_jugadores: list) -> None:
     """
@@ -113,12 +214,12 @@ def imprimir_nombre_indice(lista_jugadores: list) -> None:
 def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
     """
     obtener_e_imprimir_jugador_nombre_estadisticas: Reutiliza la función 'imprimir_nombre_indice' 
-    y 'solicitar_dato' para solicita al usuario que ingrese el índice de un jugador, almacena el nombre
-    y las estadisticas en una lista e imprime estos datos en consola.
+    y 'solicitar_dato' para solicitar al usuario que ingrese el índice de un jugador, almacena el nombre,
+    la posición y las estadisticas en una lista e imprime estos datos en consola.
 
     Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
 
-    Retorna: Una lista que contiene el nombre y las estadisticas del jugador solicitado. 
+    Retorna: Una lista que contiene el nombre, posición y las estadisticas del jugador solicitado. 
              -1 si la lista esta vacía o en caso de que el usuario no desee continuar con la búsqueda.
     """
     if not lista_jugadores:
@@ -163,6 +264,16 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list):
     return lista_data_jugador
 
 def exportar_csv(nombre_archivo: str, data_jugador: list):
+    """
+    exportar_csv: Escribe un archivo csv y si ya existe lo sobreescribe, con los datos de la lista que haya
+    recibido por parámetro, valida si se creo el archivo correctamente.
+
+    Recibe: :param nombre_archivo: String que contiene la ruta y nombre del archivo que se desea guardar.
+            :param data_jugador: Una lista de diccionarios que contiene datos de un jugador.
+
+    Retorna: Un booleano que es True si el archivo se guardo correctamente y False si el archivo no pudo
+    ser guardado.
+    """
     archivo_guardado = False
     if data_jugador:
         with open(nombre_archivo, 'w', newline='') as archivo:
@@ -183,8 +294,17 @@ def exportar_csv(nombre_archivo: str, data_jugador: list):
 
     return archivo_guardado
 
+def obtener_jugador_nombre_logros(lista_jugadores: list):
+    """
+    obtener_jugador_nombre_logros: Reutiliza la función 'imprimir_nombre_indice' 
+    y 'solicitar_dato' para solicitar al usuario que ingrese el nombre de un jugador, usando
+    la función 'obtener_nombre_dato' guarda el nombre y los logros en un diccionario.
 
-def imprimir_jugador_nombre_logros(lista_jugadores: list):
+    Recibe: :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores.
+
+    Retorna: Un diccionario que contiene el nombre y los logros del jugador solicitado. 
+             -1 si la lista esta vacía o en caso de que el usuario no desee continuar con la búsqueda.
+    """
     if not lista_jugadores:
         return -1
 
@@ -195,8 +315,8 @@ def imprimir_jugador_nombre_logros(lista_jugadores: list):
         nombre_buscado = solicitar_dato('nombre')
 
         if nombre_buscado == '-1':
-            mensaje = "\nIngrese una nueva opción del menú"
-            return print(mensaje)
+            print("\nIngrese una nueva opción del menú")
+            return -1
 
         nombre_buscado = nombre_buscado.lower()
         regex = r'\b'+ nombre_buscado + r'\b'+ r'|\b[a-zA-Z]{1,}'+ nombre_buscado + r'\b'+ r'|\b'+ nombre_buscado + r'+[a-zA-Z]{1,}\b'
@@ -207,10 +327,21 @@ def imprimir_jugador_nombre_logros(lista_jugadores: list):
             if condicion_valida:
                 dict_nombre_logros = obtener_nombre_dato(jugador,'logros')
                 return dict_nombre_logros
-                
 
 # Calcular y mostrar el promedio de puntos por partido de todo el equipo del Dream Team, ordenado por
 # nombre de manera ascendente.
+def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> float:
+    if not lista_jugadores:
+        return -1
+    
+    promedio_equipo = calcular_promedio(lista_jugadores, 'promedio_puntos_por_partido', type(dict()))
+
+    lista_ordenada_nombres = quick_sort(lista_jugadores, 'nombre')
+    print("Nombre:".ljust(20), "- Promedio puntos por partido:")
+    for jugador in lista_ordenada_nombres:
+        imprimir_nombre_dato(jugador, 'promedio_puntos_por_partido', type(dict()))
+    
+    print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
 
 """
 mostrar_menu: Imprime por consola el menú de opciones, solicita al usuario que ingrese una opción
@@ -227,7 +358,8 @@ def mostrar_menu() -> int:
     print("2. Buscar jugador por índice y mostrar sus estadísticas completas.")
     print("3. Exportar archivo CSV con las estadisticas del jugador del punto 2.")
     print("4. Buscar jugador por nombre y mostrar sus logros.")
-    print("5. ")
+    print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team,")
+    print("   ordenado por nombre de manera ascendente")
     print("6. ")
     print("7. ")
     print("0. Salir del programa")
@@ -268,7 +400,7 @@ def main():
                 else:
                     print("Debe haber ingresado la opción 2 anteriormente para poder guardar el archivo")
             case 4:
-                dict_nombre_logros = imprimir_jugador_nombre_logros(lista_jugadores)
+                dict_nombre_logros = obtener_jugador_nombre_logros(lista_jugadores)
                 nombre = dict_nombre_logros["nombre"]
                 logros = dict_nombre_logros["logros"]
                 print(f"\nNombre: {nombre}")
@@ -276,7 +408,7 @@ def main():
                 for logro in logros:
                     print(f"{logro} | ", end="")
             case 5:
-                pass
+                calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores)
             case 6:
                 pass
             case 7:
