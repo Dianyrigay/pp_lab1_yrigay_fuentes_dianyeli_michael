@@ -17,15 +17,14 @@ def imprimir_menu() -> int:
       print("2. Buscar jugador por índice y mostrar sus estadísticas completas.")
       print("3. Exportar archivo CSV con las estadisticas del jugador del punto 2.")
       print("4. Buscar jugador por nombre y mostrar sus logros.")
-      print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team,")
-      print("   ordenado por nombre de manera ascendente.")
-      print("6. Buscador jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
+      print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team ordenado por nombre de manera ascendente.")
+      print("6. Buscar jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
       print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales.")
       print("8. Calcular y mostrar el jugador con el mayor porcentaje de tiros de campo.")
       print("9. Calcular y mostrar el jugador con la mayor cantidad de asistencias totales.")
       print("10. Ingresar un valor y mostrar los jugadores que han promediado más puntos por partido que ese valor.")
-      print("11. ")
-      print("12. ")
+      print("11. Ingresar un valor y mostrar los jugadores que han promediado más rebotes por partido que ese valor.")
+      print("12. Ingresar un valor y mostrar los jugadores que han promediado más asistencias por partido que ese valor.")
       print("13. ")
       print("14. ")
       print("15. ")
@@ -113,3 +112,17 @@ def ordenar_imprimir_dato(lista_jugadores: list, key_imprimir: str, key_ordenar:
     print("Nombre:".ljust(20), f"- {dato_capitalizado}:")
     for jugador in lista_ordenada:
         imprimir_nombre_dato(jugador, key_imprimir)
+
+def calcular_imprimir_jugadores_mayor_valor(lista_jugadores:list , key_ingresada: str, valor_ingresado: float) -> None:
+    # lista_jugadores_mayor_valor = []
+    existe_valor_mayor = False
+    for jugador in lista_jugadores:
+        for valor_jugador in jugador.values():
+            if type(valor_jugador) == type(dict()) and key_ingresada in valor_jugador:
+                if type(valor_jugador[key_ingresada]) == type(int()) or type(valor_jugador[key_ingresada]) == type(float()):
+                        for key, valor in valor_jugador.items():
+                            if key == key_ingresada and valor > valor_ingresado:
+                                # lista_jugadores_mayor_valor.append(jugador)
+                                imprimir_nombre_dato(jugador, key_ingresada)
+                                existe_valor_mayor = True
+    return existe_valor_mayor
