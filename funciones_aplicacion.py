@@ -261,6 +261,11 @@ def calcular_imprimir_jugadores_asistencias_partido_mayor_valor(lista_jugadores:
     if not existe_valor_mayor:
         print("\nNo existen jugadores que tengan más asistencias por partido que ese valor")
 
+def calcular_imprimir_jugador_mayor_robos_totales(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+    imprimir.calcular_imprimir_dato(lista_jugadores, 'max', 'robos_totales')
+
 def aplicacion_jugadores():
     """
     aplicacion_jugadores: reutiliza la funcion 'mostrar_menu' para obtener la opcion elegida, de acuerdo a esta
@@ -311,7 +316,7 @@ def aplicacion_jugadores():
             case 12:
                 calcular_imprimir_jugadores_asistencias_partido_mayor_valor(lista_jugadores)
             case 13:
-                pass
+                calcular_imprimir_jugador_mayor_robos_totales(lista_jugadores)
             case 14:
                 pass
             case 15:
