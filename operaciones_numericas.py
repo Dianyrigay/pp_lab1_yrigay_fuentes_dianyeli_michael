@@ -1,6 +1,6 @@
 import re
 
-def calcular_max(lista_jugadores: list, key_ingresada: str) -> dict:
+def calcular_max(lista: list, key_ingresada: str) -> dict:
     """
     calcular_max : Compara entre los elementos de la lista para obtener el dato (diccionario)
     que contiene el mayor valor de la key ingresada por parámetro
@@ -11,33 +11,33 @@ def calcular_max(lista_jugadores: list, key_ingresada: str) -> dict:
     Retorna: Un diccionario que contiene los datos del maximo valor encontrado de la key ingresada,
     en caso que se cumpla con las validaciones. Caso contrario retorna -1
     """
-    if not lista_jugadores:
+    if not lista:
         return -1
 
     i = 0
     maximo_obtenido = False
 
-    for jugador in lista_jugadores:
-        for key_jugador, valor_jugador in jugador.items():
-            if type(valor_jugador) == type(dict()):
-                if key_ingresada in valor_jugador and not maximo_obtenido:
-                    jugador_maximo = lista_jugadores[i]
-                    maximo = jugador_maximo[key_jugador][key_ingresada]
+    for elemento in lista:
+        for key_elemento, valor_elemento in elemento.items():
+            if type(valor_elemento) == type(dict()):
+                if key_ingresada in valor_elemento and not maximo_obtenido:
+                    dato_maximo = lista[i]
+                    maximo = dato_maximo[key_elemento][key_ingresada]
                     maximo_obtenido = True
 
                 if maximo_obtenido:
-                    for key, valor in valor_jugador.items():
+                    for key, valor in valor_elemento.items():
                         if key == key_ingresada:
                             if (valor > maximo):
                                 maximo = valor
-                                jugador_maximo = jugador
+                                dato_maximo = elemento
             i += 1
 
     if not maximo_obtenido:
         print(f"El dato '{key_ingresada}' no existe o no es válido para realizar la operación")
         return -1
 
-    return jugador_maximo
+    return dato_maximo
 
 def calcular_min(lista: list, key_ingresada: str) -> dict:
     """
@@ -56,18 +56,20 @@ def calcular_min(lista: list, key_ingresada: str) -> dict:
     i = 0
     minimo_obtenido = False
 
-    for dato in lista:
-        if key_ingresada in dato and not minimo_obtenido:
-            dato_minimo = dato
-            minimo = dato_minimo[key_ingresada]
-            minimo_obtenido = True
+    for elemento in lista:
+        for key_elemento, valor_elemento in elemento.items():
+            if type(valor_elemento) == type(dict()):
+                if key_ingresada in valor_elemento and not minimo_obtenido:
+                    dato_minimo = lista[i]
+                    minimo = dato_minimo[key_elemento][key_ingresada]
+                    minimo_obtenido = True
 
-        if minimo_obtenido:
-            for key, valor in dato.items():
-                if key == key_ingresada:
-                    if (valor < minimo):
-                        minimo = valor
-                        dato_minimo = dato
+                if minimo_obtenido:
+                    for key, valor in valor_elemento.items():
+                        if key == key_ingresada:
+                            if (valor < minimo):
+                                minimo = valor
+                                dato_minimo = elemento
         i += 1
 
     if not minimo_obtenido:

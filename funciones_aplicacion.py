@@ -286,10 +286,11 @@ def calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores: list) 
 def calcular_e_imprimir_puntos_por_partido_excluyendo_min_promedio(lista_jugadores: list) -> None:
     if not lista_jugadores:
         return -1
-    # lista_ordenada = ordenar.quick_sort(lista_jugadores, 'promedio_puntos_por_partido')
-    # print(lista_ordenada)
-    # promedio_equipo = operacion.calcular_promedio(lista_jugadores, 'promedio_puntos_por_partido')
-    # print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
+    lista_jugadores_copia = lista_jugadores.copy()
+    jugador_min_puntos_partido = operacion.calcular_min(lista_jugadores,'promedio_puntos_por_partido')
+    lista_jugadores_copia.remove(jugador_min_puntos_partido)
+    promedio_equipo = operacion.calcular_promedio(lista_jugadores_copia, 'promedio_puntos_por_partido')
+    print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
 
 def calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> None:
     if not lista_jugadores:
