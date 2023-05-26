@@ -146,3 +146,14 @@ def calcular_promedio(lista_jugadores: list, key_ingresada: str) -> float:
     promedio = suma_valores / cantidad_key_en_lista
 
     return promedio
+
+def calcular_datos_mayor_a_valor_ingresado(lista: list, key_ingresada: str, valor_ingresado: float):
+    lista_datos_mayor_valor = []
+    for elemento in lista:
+        for valor_elemento in elemento.values():
+            if type(valor_elemento) == type(dict()) and key_ingresada in valor_elemento:
+                if type(valor_elemento[key_ingresada]) == type(int()) or type(valor_elemento[key_ingresada]) == type(float()):
+                        for key, valor in valor_elemento.items():
+                            if key == key_ingresada and valor > valor_ingresado:
+                                lista_datos_mayor_valor.append(elemento)
+    return lista_datos_mayor_valor

@@ -37,7 +37,7 @@ def imprimir_menu() -> int:
       print("0. Salir del programa")
       opcion = input("\nIngrese la opción deseada: ")
       print("\n----------------------------------------------------")
-      opcion_valida = re.search(r'^[1-9]$|^1[0-9]$|^20$', opcion)
+      opcion_valida = re.search(r'^[0-9]$|^1[0-9]$|^20$', opcion)
       if not bool(opcion_valida):
           return -1
       opcion = int(opcion)
@@ -114,15 +114,11 @@ def ordenar_imprimir_dato(lista_jugadores: list, key_imprimir: str, key_ordenar:
         imprimir_nombre_dato(jugador, key_imprimir)
 
 def calcular_imprimir_jugadores_mayor_valor(lista_jugadores:list , key_ingresada: str, valor_ingresado: float) -> None:
-    # lista_jugadores_mayor_valor = []
     existe_valor_mayor = False
-    for jugador in lista_jugadores:
-        for valor_jugador in jugador.values():
-            if type(valor_jugador) == type(dict()) and key_ingresada in valor_jugador:
-                if type(valor_jugador[key_ingresada]) == type(int()) or type(valor_jugador[key_ingresada]) == type(float()):
-                        for key, valor in valor_jugador.items():
-                            if key == key_ingresada and valor > valor_ingresado:
-                                # lista_jugadores_mayor_valor.append(jugador)
-                                imprimir_nombre_dato(jugador, key_ingresada)
-                                existe_valor_mayor = True
+    lista_jugadores_mayor_valor = operacion.calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_ingresada, valor_ingresado)
+    if not lista_jugadores_mayor_valor:
+        return existe_valor_mayor
+
+    for jugador in lista_jugadores_mayor_valor:
+        imprimir_nombre_dato(jugador, key_ingresada)
     return existe_valor_mayor

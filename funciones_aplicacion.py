@@ -328,8 +328,17 @@ def calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores: list) -
     valor_ingresado = solicitar.solicitar_valor_float()
     if valor_ingresado == -1:
         return -1
-    existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_ordenada,'porcentaje_tiros_de_campo', valor_ingresado)
-    if not existe_valor_mayor:
+    lista_jugadores_mayor_valor = operacion.calcular_datos_mayor_a_valor_ingresado(lista_ordenada,'porcentaje_tiros_de_campo', valor_ingresado)
+    print("\nNombre:".ljust(20), "- Porcentaje tiros de campo:".ljust(30), "- Posición:".ljust(20))
+    for jugador in lista_jugadores_mayor_valor:
+        estadisticas = jugador["estadisticas"]
+        for key, valor in estadisticas.items():
+            if key == 'porcentaje_tiros_de_campo':
+                porcentaje_tiros_de_campo = valor
+        nombre = jugador["nombre"]
+        posicion = jugador["posicion"]
+        print(f"{nombre}".ljust(20), f"- {porcentaje_tiros_de_campo}".ljust(30), f"- {posicion}".ljust(20))
+    if not lista_jugadores_mayor_valor:
         print("\nNo existen jugadores que tengan mayor porcentaje de tiros de campo que ese valor")
 
 def aplicacion_jugadores():
