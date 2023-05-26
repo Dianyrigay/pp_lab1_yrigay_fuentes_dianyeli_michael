@@ -280,7 +280,7 @@ def calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores: list) 
         return -1
     existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'porcentaje_tiros_libres', valor_ingresado)
     if not existe_valor_mayor:
-        print("\nNo existen jugadores que tengan más asistencias por partido que ese valor")
+        print("\nNo existen jugadores que tengan mayor porcentaje de tiros libres que ese valor")
 
 def aplicacion_jugadores():
     """
@@ -336,7 +336,7 @@ def aplicacion_jugadores():
             case 14:
                 calcular_imprimir_jugador_mayor_bloqueos_totales(lista_jugadores)
             case 15:
-                pass
+                calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores)
             case 16:
                 pass
             case 17:
