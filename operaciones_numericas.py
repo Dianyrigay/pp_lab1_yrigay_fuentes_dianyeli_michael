@@ -107,7 +107,6 @@ def calcular_max_min_dato(lista_jugadores: list, calculo: str, key_ingresada: st
 
     return dato_dict
 
-
 def calcular_promedio(lista_jugadores: list, key_ingresada: str) -> float:
     """
     calcular_promedio : Suma los valores de la key ingresada por parámetro y acumula la cantidad de
