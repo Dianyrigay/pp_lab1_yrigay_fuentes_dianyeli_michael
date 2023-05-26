@@ -309,6 +309,16 @@ def calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> N
 
     imprimir.imprimir_nombre_dato(jugador_mayor_logros,'logros')
 
+def calcular_imprimir_jugadores_tiros_triples_mayor_valor(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    valor_ingresado = solicitar.solicitar_valor_float()
+    if valor_ingresado == -1:
+        return -1
+    existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'porcentaje_tiros_triples', valor_ingresado)
+    if not existe_valor_mayor:
+        print("\nNo existen jugadores que tengan mayor porcentaje de tiros triples que ese valor")
 
 def aplicacion_jugadores():
     """
@@ -370,7 +380,7 @@ def aplicacion_jugadores():
             case 17:
                 calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores)
             case 18:
-                pass
+                calcular_imprimir_jugadores_tiros_triples_mayor_valor(lista_jugadores)
             case 19:
                 pass
             case 20:
