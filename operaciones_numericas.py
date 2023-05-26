@@ -34,7 +34,7 @@ def calcular_max(lista_jugadores: list, key_ingresada: str) -> dict:
             i += 1
 
     if not maximo_obtenido:
-        print(f"El dato '{key_ingresada}' no existe en la lista")
+        print(f"El dato '{key_ingresada}' no existe o no es válido para realizar la operación")
         return -1
 
     return jugador_maximo

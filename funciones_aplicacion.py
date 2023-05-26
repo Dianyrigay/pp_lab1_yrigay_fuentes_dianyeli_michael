@@ -6,6 +6,7 @@
 import operaciones_numericas as operacion
 import imprimir_datos as imprimir
 import solicitar_datos as solicitar
+import ordenar_datos as ordenar
 import re
 import json
 import csv
@@ -282,6 +283,32 @@ def calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores: list) 
     if not existe_valor_mayor:
         print("\nNo existen jugadores que tengan mayor porcentaje de tiros libres que ese valor")
 
+def calcular_e_imprimir_puntos_por_partido_excluyendo_min_promedio(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+    # lista_ordenada = ordenar.quick_sort(lista_jugadores, 'promedio_puntos_por_partido')
+    # print(lista_ordenada)
+    # promedio_equipo = operacion.calcular_promedio(lista_jugadores, 'promedio_puntos_por_partido')
+    # print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
+
+def calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+    mayor_cantidad_obtenida = False
+    for jugador in lista_jugadores:
+        if 'logros' in jugador:
+            if not mayor_cantidad_obtenida:
+                jugador_mayor_logros = jugador
+                mayor_cantidad_logros = len(jugador["logros"])
+                mayor_cantidad_obtenida = True
+            else:
+                if len(jugador["logros"]) > mayor_cantidad_logros:
+                    jugador_mayor_logros = jugador
+                    mayor_cantidad_logros = len(jugador["logros"])
+
+    imprimir.imprimir_nombre_dato(jugador_mayor_logros,'logros')
+
+
 def aplicacion_jugadores():
     """
     aplicacion_jugadores: reutiliza la funcion 'mostrar_menu' para obtener la opcion elegida, de acuerdo a esta
@@ -338,9 +365,9 @@ def aplicacion_jugadores():
             case 15:
                 calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores)
             case 16:
-                pass
+                calcular_e_imprimir_puntos_por_partido_excluyendo_min_promedio(lista_jugadores)
             case 17:
-                pass
+                calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores)
             case 18:
                 pass
             case 19:
