@@ -237,7 +237,8 @@ def calcular_imprimir_jugadores_puntos_por_partido_mayor_valor(lista_jugadores: 
         return -1
     existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'promedio_puntos_por_partido', valor_ingresado)
     if not existe_valor_mayor:
-        print("No existen jugadores que tengan más puntos por partido que ese valor")
+        print("\nNo existen jugadores que tengan más puntos por partido que ese valor")
+
 def calcular_imprimir_jugadores_rebotes_partido_mayor_valor(lista_jugadores: list) -> None:
     if not lista_jugadores:
         return -1
@@ -247,7 +248,18 @@ def calcular_imprimir_jugadores_rebotes_partido_mayor_valor(lista_jugadores: lis
         return -1
     existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'promedio_rebotes_por_partido', valor_ingresado)
     if not existe_valor_mayor:
-        print("No existen jugadores que tengan más rebotes por partido que ese valor")
+        print("\nNo existen jugadores que tengan más rebotes por partido que ese valor")
+
+def calcular_imprimir_jugadores_asistencias_partido_mayor_valor(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    valor_ingresado = solicitar.solicitar_valor_float()
+    if valor_ingresado == -1:
+        return -1
+    existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'promedio_asistencias_por_partido', valor_ingresado)
+    if not existe_valor_mayor:
+        print("\nNo existen jugadores que tengan más asistencias por partido que ese valor")
 
 def aplicacion_jugadores():
     """
@@ -297,7 +309,7 @@ def aplicacion_jugadores():
             case 11:
                 calcular_imprimir_jugadores_rebotes_partido_mayor_valor(lista_jugadores)
             case 12:
-                pass
+                calcular_imprimir_jugadores_asistencias_partido_mayor_valor(lista_jugadores)
             case 13:
                 pass
             case 14:
