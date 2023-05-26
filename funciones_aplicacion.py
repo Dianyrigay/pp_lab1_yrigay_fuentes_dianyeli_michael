@@ -266,6 +266,22 @@ def calcular_imprimir_jugador_mayor_robos_totales(lista_jugadores: list) -> None
         return -1
     imprimir.calcular_imprimir_dato(lista_jugadores, 'max', 'robos_totales')
 
+def calcular_imprimir_jugador_mayor_bloqueos_totales(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+    imprimir.calcular_imprimir_dato(lista_jugadores, 'max', 'bloqueos_totales')
+
+def calcular_imprimir_jugadores_tiros_libres_mayor_valor(lista_jugadores: list) -> None:
+    if not lista_jugadores:
+        return -1
+
+    valor_ingresado = solicitar.solicitar_valor_float()
+    if valor_ingresado == -1:
+        return -1
+    existe_valor_mayor = imprimir.calcular_imprimir_jugadores_mayor_valor(lista_jugadores,'porcentaje_tiros_libres', valor_ingresado)
+    if not existe_valor_mayor:
+        print("\nNo existen jugadores que tengan más asistencias por partido que ese valor")
+
 def aplicacion_jugadores():
     """
     aplicacion_jugadores: reutiliza la funcion 'mostrar_menu' para obtener la opcion elegida, de acuerdo a esta
@@ -318,7 +334,7 @@ def aplicacion_jugadores():
             case 13:
                 calcular_imprimir_jugador_mayor_robos_totales(lista_jugadores)
             case 14:
-                pass
+                calcular_imprimir_jugador_mayor_bloqueos_totales(lista_jugadores)
             case 15:
                 pass
             case 16:
