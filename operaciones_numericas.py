@@ -1,4 +1,5 @@
 import re
+import imprimir_datos as imprimir
 
 def calcular_max(lista: list, key_ingresada: str) -> dict:
     """
@@ -157,3 +158,28 @@ def calcular_datos_mayor_a_valor_ingresado(lista: list, key_ingresada: str, valo
                             if key == key_ingresada and valor > valor_ingresado:
                                 lista_datos_mayor_valor.append(elemento)
     return lista_datos_mayor_valor
+
+def calcular_imprimir_jugadores_mayor_valor(lista_jugadores:list , key_ingresada: str, valor_ingresado: float) -> None:
+    """
+    calcular_imprimir_jugadores_mayor_valor: Toma una lista de jugadores y un par clave-valor e imprime los nombres de los jugadores
+    cuyo valor para la clave dada es mayor que el valor dado.
+
+    :param lista_jugadores: una lista de diccionarios que representan a los jugadores y sus atributos
+    :type lista_jugadores: list
+    :param key_ingresada: Una cadena que representa la clave (atributo) del objeto jugador que la
+    función usará para comparar con el parámetro value_ingresado
+    :type key_ingresada: str
+    :param valor_ingresado: El valor ingresado por el usuario para comparar con los valores de los datos
+    de los jugadores
+    :type valor_ingresado: float
+    :return: Si la lista de jugadores con un valor mayor que el valor ingresado está vacía, la función
+    devuelve el valor booleano Falso. De lo contrario, devuelve Ninguno.
+    """
+    existe_valor_mayor = False
+    lista_jugadores_mayor_valor = calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_ingresada, valor_ingresado)
+    if not lista_jugadores_mayor_valor:
+        return existe_valor_mayor
+
+    for jugador in lista_jugadores_mayor_valor:
+        imprimir.imprimir_nombre_dato(jugador, key_ingresada)
+    return existe_valor_mayor

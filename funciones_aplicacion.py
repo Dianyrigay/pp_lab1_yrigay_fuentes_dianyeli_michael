@@ -3,53 +3,38 @@
 
 # PARCIAL PROGRAMACIÓN
 
+import re
+import json
+import csv
+import os
 import operaciones_numericas as operacion
 import imprimir_datos as imprimir
 import solicitar_datos as solicitar
 import ordenar_datos as ordenar
-import re
-import json
-import csv
+
+def clear_console() -> None:
+    """
+    La función borra la pantalla de la consola en Python esperando la entrada del usuario y luego
+    llamando al comando 'cls'.
+    """
+    _ = input('\nPresione una tecla para continuar...')
+    os.system('cls')
 
 def leer_archivo(nombre_archivo: str) -> list:
     """
-    leer_archivo: Carga los datos del archivo json, almacenandolos en una lista. El modo de apertura
-    del archivo es de solo lectura
+    leer_archivo: Lee un archivo JSON y devuelve una lista de jugadores.
 
-    Recibe: :param nombre_archivo: String que contiene la ruta y nombre del archivo que se desea leer.
+    Recibe:
+    :param nombre_archivo: String que contiene la ruta y nombre del archivo que desea leer.
 
-    Retorna: La lista obtenida del archivo json
+    Retorna: Una lista de jugadores obtenida de un archivo JSON.
     """
-    lista = []
+    lista_jugadores_json = []
 
     with open(nombre_archivo) as archivo:
         data = json.load(archivo)
-        lista = data["jugadores"]
-    return lista
-
-lista_jugadores = leer_archivo('dt.json')
-
-def obtener_nombre_dato(jugador: dict, key_ingresada: str) -> dict:
-    """
-    obtener_nombre_dato: Obtiene el nombre del jugador y el valor de la key ingresada.
-
-    Recibe: :param jugador: Diccionario que contiene los datos de un jugador.
-            :param key_ingresada: String que hace referencia al dato del que se desea obtener el valor.
-
-    Retorna: Un diccionario que contiene como keys el nombre y el dato pasado por parametro, si el jugador es
-    de tipo 'dict'; caso contrario retorna -1.
-    """
-    dict_nombre_dato = {}
-
-    if type(jugador) != type(dict()):
-        return -1
-
-    if 'nombre' not in jugador and key_ingresada not in jugador:
-        return -1
-
-    dict_nombre_dato["nombre"] = jugador["nombre"]
-    dict_nombre_dato[key_ingresada] = jugador[key_ingresada]
-    return dict_nombre_dato
+        lista_jugadores_json = data["jugadores"]
+    return lista_jugadores_json
 
 def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
     """
@@ -62,7 +47,7 @@ def imprimir_jugadores_posicion(lista_jugadores: list) -> None:
     if not lista_jugadores:
         return -1
 
-    print("Nombre:".ljust(20), "- Posición:")
+    imprimir.imprimir_tabla_encabezado(['Nombre:', 'Posición:'], '20')
     for jugador in lista_jugadores:
         imprimir.imprimir_nombre_dato(jugador, 'posicion')
 
@@ -182,7 +167,7 @@ def obtener_jugador_nombre_logros(lista_jugadores: list) -> list:
     lista_jugadores_validos = []
 
     while not lista_jugadores_validos:
-        nombre_buscado = solicitar.solicitar_dato('nombre')
+        nombre_buscado = solicitar.solicitar_dato('nombre').lower()
 
         if nombre_buscado == '-1':
             print("\nIngrese una nueva opción del menú")
@@ -341,7 +326,7 @@ def calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores: list) -
     if not lista_jugadores_mayor_valor:
         print("\nNo existen jugadores que tengan mayor porcentaje de tiros de campo que ese valor")
 
-def aplicacion_jugadores():
+def aplicacion_jugadores(lista_jugadores: list):
     """
     aplicacion_jugadores: reutiliza la funcion 'mostrar_menu' para obtener la opcion elegida, de acuerdo a esta
     llama a una función para aplicar la lógica correspondiente.
@@ -352,6 +337,7 @@ def aplicacion_jugadores():
     """
     flag_guardar_archivo = False
     while True:
+
         opcion = imprimir.imprimir_menu()
         opcion_valida = re.search(r'2', str(opcion))
         if bool(opcion_valida):
@@ -412,3 +398,4 @@ def aplicacion_jugadores():
                 break
             case _:
                 print("Opción no válida")
+        clear_console()
