@@ -85,28 +85,3 @@ def quick_sort_dicts(lista:list, key_ingresada: str, ascendente:bool = True)->li
     lista_iz.extend(lista_de)
     lista_ordenada = lista_iz
     return lista_ordenada
-
-def ordenar_imprimir_dato(lista: list, key_imprimir: str, key_ordenar: str)-> None or -1:
-    """
-    ordenar_imprimir_dato: Toma una lista, una key para imprimir y una key para ordenar, y luego
-    ordena la lista por la key_ordenar e imprime el nombre y los datos bajo la key_imprimir.
-
-    :param lista: Una lista de diccionarios que contiene datos.
-    :param key_imprimir: String que representa la key de los datos que se imprimirán.
-    :param key_ordenar: String que representa la key  por la que se desea ordenar la lista.
-
-    :return: None si cumple con las validaciones, caso contrario devuelve -1.
-    """
-    if not lista:
-        return -1
-
-    lista_ordenada = quick_sort(lista, key_ordenar)
-
-    if not lista_ordenada:
-        print("No se pudo ordear la lista")
-        return -1
-
-    dato_capitalizado = re.sub(r'_', ' ', key_imprimir).capitalize()
-    imprimir.imprimir_tabla_encabezado(['Nombres',dato_capitalizado], '20')
-    for elemento in lista_ordenada:
-        imprimir.imprimir_obtener_nombre_dato(elemento, key_imprimir)

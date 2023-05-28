@@ -108,32 +108,6 @@ def calcular_promedio(lista: list, key_ingresada: str) -> float or -1:
 
     return promedio
 
-def calcular_max_imprimir_dato(lista: list, key_ingresada: str) -> None or -1:
-    """
-    calcular_max_imprimir_dato: calcula el valor máximo de una key determinada en una lista,
-    formatea el nombre de la key e imprime un encabezado de tabla y el nombre y el valor de los datos máximos.
-
-    :param lista: Lista de diccionarios que contienen datos.
-    :param key_ingresada: String que representa la key o atributo de los datos de la lista para los que
-    queremos calcular el valor máximo.
-
-    :return: None o -1 si no se cumple con las validaciones.
-    """
-    if not lista:
-        print(f"La lista está vacía, no es posible realizar la operación")
-        return -1
-
-    lista_dato_max = calcular_max(lista, key_ingresada)
-
-    if lista_dato_max == -1 or not lista_dato_max:
-        print("No se pudo obtener el máximo")
-        return -1
-
-    dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
-    imprimir.imprimir_tabla_encabezado(['Nombre', dato_capitalizado], '20')
-    for dato_max in lista_dato_max:
-        imprimir.imprimir_obtener_nombre_dato(dato_max, key_ingresada)
-
 def calcular_datos_mayor_a_valor_ingresado(lista: list, key_ingresada: str, valor_ingresado: float) -> list or -1:
     """
     calcular_datos_mayor_a_valor_ingresado: Toma una lista de diccionarios, una key y un valor, y devuelve una

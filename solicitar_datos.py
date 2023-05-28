@@ -36,6 +36,30 @@ def solicitar_valor_float() -> float or -1:
     valor_ingresado = float(valor_ingresado)
     return valor_ingresado
 
+def solicitar_valor_indice(lista_jugadores: list) -> int or -1:
+    """
+    solicitar_valor_indice: Solicita al usuario que ingrese un valor entero válido y lo devuelve.
+
+    :return: int que es valor ingresado por el usuario, sino devuelve un entero que es -1, en caso
+    que el usuario no desee continuar con la operación.
+    """
+    valor_valido = False
+    imprimir.imprimir_nombre_indice_jugadores(lista_jugadores)
+
+    while not valor_valido:
+        indice_ingresado = solicitar_dato('indice')
+        if indice_ingresado == '-1':
+            break
+        valor_valido = re.search(r'^[0-9]$|^1[0-1]$', indice_ingresado)
+        valor_valido = bool(valor_valido)
+
+    if indice_ingresado == '-1':
+        print("\nIngrese una nueva opción del menú")
+        return -1
+
+    indice_ingresado = int(indice_ingresado)
+    return indice_ingresado
+
 def solicitar_obtener_nombre_jugador(lista_jugadores: list) -> list or -1:
     """
     solicitar_obtener_nombre_jugador: Busca el nombre de un jugador en una lista de jugadores y devuelve una lista de

@@ -88,16 +88,16 @@ def obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> dict or -1:
     dict_nombre_dato[key_ingresada] = dato
     return dict_nombre_dato
 
-def imprimir_obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> None or -1:
+def imprimir_obtener_nombre_dato(dict_datos: list, key_ingresada: str) -> None or -1:
     """
-    imprimir_nombre_dato: Toma un diccionario y una clave como entrada, recupera el nombre y el valor asociado
-    con la clave y los imprime formateados según el tipo de valor.
+    imprimir_dato: formatea el nombre de la key e imprime un encabezado de tabla y el nombre y el valor
+    de los datos máximos.
 
-    :param dict_datos: Diccionario que contiene datos para ser impresos.
-    :param key_ingresada: String que hace referencia a la clave de los datos que el usuario desea recuperar
-    del diccionario.
+    :param dict_datos: Lista de diccionarios que contienen datos.
+    :param key_ingresada: String que representa la key o atributo de los datos de la lista para los que
+    queremos calcular el valor máximo.
 
-    :return: Devuelve None si imprime con éxito el nombre y los datos, o -1 si hay un error.
+    :return: None o -1 si no se cumple con las validaciones.
     """
     if type(dict_datos) != type(dict()):
         print(f"El tipo {type(dict_datos)} no es válido, intente nuevamente")
@@ -112,36 +112,42 @@ def imprimir_obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> None o
     dato = dict_nombre_dato[key_ingresada]
     nombre = dict_nombre_dato['nombre']
 
-    if type(nombre) != type(str()):
-        print("No se pudo obtener el nombre")
-        return -1
     if dato == None:
         print(f"No se pudo obtener el/los valor/es de {key_ingresada}")
         return -1
 
     if type(dato) != type(dict()) and type(dato) != type(list()):
-        print(nombre.ljust(20), dato)
+        imprimir_nombre_str_formateado(nombre, dato)
     elif type(dato) == type(dict()):
-        i = 0
-        for key, valor in dato.items():
-            if i == 0:
-                print(nombre.ljust(20), end="")
-                print(f"{key.capitalize()}: ", valor)
-            else:
-                print("".ljust(20),f"{key.capitalize()}: ", valor)
-            i += 1
+        imprimir_nombre_dict_formateado(nombre, dato)
     elif type(dato) == type(list()):
-        i = 0
-        for elemento in dato:
-            if i == 0:
-                print(nombre.ljust(20), end="")
-                print(f"{elemento.capitalize()}")
-            else:
-                print("".ljust(20),f"{elemento.capitalize()}")
-            i += 1
+        imprimir_nombre_list_formateada(nombre, dato)
     else:
         print(f"EL tipo de dato {type(dato)} no se puede imprimir")
         return -1
+
+def imprimir_nombre_str_formateado(nombre: str, dato: str or int or float) -> None:
+    print(nombre.ljust(20), dato)
+
+def imprimir_nombre_dict_formateado(nombre: str, dato: dict) -> None:
+    i = 0
+    for key, valor in dato.items():
+        if i == 0:
+            print(nombre.ljust(20), end="")
+            print(f"{key.capitalize()}: ", valor)
+        else:
+            print("".ljust(20),f"{key.capitalize()}: ", valor)
+        i += 1
+
+def imprimir_nombre_list_formateada(nombre: str, dato: list) -> None:
+    i = 0
+    for elemento in dato:
+        if i == 0:
+            print(nombre.ljust(20), end="")
+            print(f"{elemento.capitalize()}")
+        else:
+            print("".ljust(20),f"{elemento.capitalize()}")
+        i += 1
 
 def imprimir_nombre_indice_jugadores(lista_jugadores: list) -> None or -1:
     """
