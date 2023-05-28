@@ -34,7 +34,7 @@ def imprimir_menu() -> int or -1:
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
     print("\n----------------------------------------------------")
-    opcion_valida = re.search(r'^[0-9]$|^1[0-9]$|^20$', opcion)
+    opcion_valida = re.search(r'^[0-9]$|^1[0-9]$|^20$|^23$', opcion)
     if not bool(opcion_valida):
         return -1
     opcion = int(opcion)
@@ -119,7 +119,7 @@ def imprimir_obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> None o
         print(f"No se pudo obtener el/los valor/es de {key_ingresada}")
         return -1
 
-    if type(dato) == type(str()) or type(dato) == type(int()) or type(dato) == type(float()):
+    if type(dato) != type(dict()) and type(dato) != type(list()):
         print(nombre.ljust(20), dato)
     elif type(dato) == type(dict()):
         i = 0
@@ -171,7 +171,7 @@ def imprimir_tabla_encabezado(lista_titulos_encabezado: list, longitud: str) -> 
 
     :param lista_titulos_encabezado: Una lista de cadenas que representan los títulos que se imprimirán
     como encabezados en una tabla.
-    :param longitud: La longitud de los títulos de los encabezados en caracteres.
+    :param longitud: String que representa la longitud de los títulos de los encabezados en caracteres.
 
     :return: None si los parámetros de entrada son válidos o -1 si no se cumple con las validaciones.
     """
@@ -198,7 +198,7 @@ def imprimir_datos_tabla(lista_datos_fila: list, longitud: str)-> None or -1:
 
     :param lista_datos_fila: Una lista de cadenas que representan los datos que se imprimirán
     como filas en una tabla.
-    :param longitud: La longitud de los datos de los filas en caracteres.
+    :param longitud: String que representa la longitud de los datos de las filas en caracteres.
 
     :return: None si los parámetros de entrada son válidos o -1 si no se cumple con las validaciones.
     """

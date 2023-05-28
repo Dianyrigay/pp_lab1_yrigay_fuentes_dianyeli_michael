@@ -3,16 +3,17 @@ import imprimir_datos as imprimir
 
 def quick_sort(lista:list, key: str, ascendente:bool = True)->list:
     """
-    quick_sort: Ordena una lista de diccionarios por el dato 'key' pasado por parámetro de
-    forma ascendente por defecto o descendente si se desea.
+    quick_sort: Realiza una clasificación rápida en una lista de diccionarios
+    según una clave específica y un orden de clasificación.
 
-    Recibe: :param lista: Una lista de diccionarios que contiene datos
-            :param key: String que representa la key por la que se desea ordenar la lista
-            :param ascendente: Booleano que indica si el ordenamiento debe ser ascendente o
-                            descendente (por defecto es True)
+    :param lista: una lista de diccionarios que se ordenarán según el valor de una clave específica en
+    cada diccionario
+    :param key: String que representa la clave o atributo de los objetos de la lista que se utilizará para ordenarlos
+    :param ascendente: Booleano opcional que determina si la clasificación se debe realizar en orden
+    ascendente (True) o descendente (False). Por default es True
 
-    Retorna: Una lista de diccionarios ordenada si se cumple con las validaciones, caso contrario
-    retorna -1.
+    :return: Una lista ordenada basada en el algoritmo de clasificación rápida, utilizando la clave
+    especificada para comparar los elementos bajo el orden recibido por parámetro.
     """
     i = 0
     lista_de = []
@@ -58,7 +59,13 @@ def ordenar_imprimir_dato(lista: list, key_imprimir: str, key_ordenar: str)-> No
     """
     if not lista:
         return -1
+
     lista_ordenada = quick_sort(lista, key_ordenar)
+
+    if not lista_ordenada:
+        print("No se pudo ordear la lista")
+        return -1
+
     dato_capitalizado = re.sub(r'_', ' ', key_imprimir).capitalize()
     imprimir.imprimir_tabla_encabezado(['Nombres',dato_capitalizado], '20')
     for elemento in lista_ordenada:
