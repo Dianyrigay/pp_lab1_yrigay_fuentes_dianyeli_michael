@@ -178,7 +178,8 @@ def calcular_imprimir_jugadores_mayor_valor(lista_jugadores:list , key_ingresada
         return existe_valor_mayor
 
     existe_valor_mayor = True
-    #TODO agregar encabezado
+    dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
+    imprimir.imprimir_tabla_encabezado(['Nombre', dato_capitalizado], '20')
     for jugador in lista_jugadores_mayor_valor:
         imprimir.imprimir_obtener_nombre_dato(jugador, key_ingresada)
     return existe_valor_mayor
