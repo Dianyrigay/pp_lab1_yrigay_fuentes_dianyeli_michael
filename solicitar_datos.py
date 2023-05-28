@@ -1,5 +1,4 @@
 import re
-import imprimir_datos as imprimir
 def solicitar_dato(dato: str) -> str:
     """
     solicitar_dato: Solicita al usuario por consola que ingrese un dato de un jugador.
@@ -18,7 +17,7 @@ def solicitar_valor_float() -> float:
         valor_ingresado = solicitar_dato('valor')
         if valor_ingresado == '-1':
             break
-        valor_valido = re.search(r'^[0-9]{1,}$|^[0-9]{1,}.[0-9]{1,}$', valor_ingresado)
+        valor_valido = re.search(r'^[0-9]{1,}$|^[0-9]{1,}\.[0-9]{1,}$', valor_ingresado)
         valor_valido = bool(valor_valido)
 
     if valor_ingresado == '-1':

@@ -1,6 +1,4 @@
-import operaciones_numericas as operacion
 import re
-import ordenar_datos as ordenar
 
 def imprimir_menu() -> int or -1:
     """
@@ -51,10 +49,10 @@ def obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> dict or -1:
     :param key_ingresada: String que hace referencia a la clave que se busca en el diccionario
 
     :return: Un diccionario con el nombre y el valor de la clave ingresados como argumentos si se
-    cumple con las validaciones, o -1 si el diccionario de entrada no es válido o si la clave no se
-    encuentra en el diccionario.
+    cumple con las validaciones, o -1 si no se cumplen con las validaciones.
     """
     if type(dict_datos) != type(dict()):
+        print(f"El tipo {type(dict_datos)} no es válido, intente nuevamente")
         return -1
 
     if 'nombre' not in dict_datos:
@@ -66,28 +64,31 @@ def obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> dict or -1:
     nombre = dict_datos["nombre"]
 
     for key_dict_datos, valor_dict_datos in dict_datos.items():
-        if key_ingresada in dict_datos:
-            if type(valor_dict_datos) == type(str()) and key_dict_datos == key_ingresada:
+        if key_ingresada in dict_datos and key_dict_datos == key_ingresada:
+            if type(valor_dict_datos) == type(str()):
                 dato = dict_datos[key_ingresada]
+            elif type(valor_dict_datos) == type(dict()):
+                dato = valor_dict_datos
+            elif type(valor_dict_datos) == type(list()):
+                dato = valor_dict_datos
         elif key_ingresada in valor_dict_datos:
             if type(valor_dict_datos) == type(dict()):
                 for key, valor in valor_dict_datos.items():
                     if key == key_ingresada:
                         dato = valor
-            if type(valor_dict_datos) == type(list()):
+            elif type(valor_dict_datos) == type(list()):
                 for elemento in valor_dict_datos:
-                    if key_ingresada in elemento:
-                        dato = elemento
                     dato = elemento
-        else:
-            print(f"{key_ingresada} no se encuentra en el diccionario recibido.")
-            return -1
+
+    if dato == None:
+        print(f"No se pudo obtener el valor de {key_ingresada}")
+        return -1
 
     dict_nombre_dato["nombre"] = nombre
     dict_nombre_dato[key_ingresada] = dato
     return dict_nombre_dato
 
-def imprimir_nombre_dato(dict_datos: dict, key_ingresada: str) -> None or -1:
+def imprimir_obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> None or -1:
     """
     imprimir_nombre_dato: Toma un diccionario y una clave como entrada, recupera el nombre y el valor asociado
     con la clave y los imprime formateados según el tipo de valor.
@@ -111,14 +112,57 @@ def imprimir_nombre_dato(dict_datos: dict, key_ingresada: str) -> None or -1:
     dato = dict_nombre_dato[key_ingresada]
     nombre = dict_nombre_dato['nombre']
 
+    if type(nombre) != type(str()):
+        print("No se pudo obtener el nombre")
+        return -1
+    if dato == None:
+        print(f"No se pudo obtener el/los valor/es de {key_ingresada}")
+        return -1
+
     if type(dato) == type(str()) or type(dato) == type(int()) or type(dato) == type(float()):
         print(nombre.ljust(20), dato)
-    if type(dato) == type(dict()):
+    elif type(dato) == type(dict()):
+        i = 0
         for key, valor in dato.items():
-            print("".ljust(20),f"{key.capitalize()}: ", valor)
-    if type(dato) == type(list()):
+            if i == 0:
+                print(nombre.ljust(20), end="")
+                print(f"{key.capitalize()}: ", valor)
+            else:
+                print("".ljust(20),f"{key.capitalize()}: ", valor)
+            i += 1
+    elif type(dato) == type(list()):
+        i = 0
         for elemento in dato:
-            print("".ljust(20),f"{elemento.capitalize()}")
+            if i == 0:
+                print(nombre.ljust(20), end="")
+                print(f"{elemento.capitalize()}")
+            else:
+                print("".ljust(20),f"{elemento.capitalize()}")
+            i += 1
+    else:
+        print(f"EL tipo de dato {type(dato)} no se puede imprimir")
+        return -1
+
+def imprimir_nombre_indice_jugadores(lista_jugadores: list) -> None or -1:
+    """
+    imprimir_nombre_indice_jugadores: Imprime el índice y el nombre de cada jugador en una lista de jugadores.
+
+    :param lista_jugadores: Una lista de diccionarios, donde cada diccionario contiene datos sobre un jugador.
+
+    :return: Si la lista está vacía, devuelve -1. De lo contrario, la función imprime el índice y el nombre de
+      cada jugador en la lista y devuelve None.
+    """
+    if not lista_jugadores:
+        print("Lista de jugadores vacía")
+        return -1
+
+    indice = 0
+    for jugador in lista_jugadores:
+        if 'nombre' in jugador:
+            nombre = jugador['nombre']
+        mensaje = f"\t{indice} - {nombre}"
+        indice += 1
+        print(mensaje)
 
 def imprimir_tabla_encabezado(lista_titulos_encabezado: list, longitud: str) -> None or -1:
     """
@@ -137,61 +181,38 @@ def imprimir_tabla_encabezado(lista_titulos_encabezado: list, longitud: str) -> 
 
     longitud_valida = re.search(r'^[1-9]$|1[0-9]$|^2[0-9]$|^3[0-9]$|^4[0-9]$|50', longitud)
     if not bool(longitud_valida):
-        print("La longitud no debe ser superior a 50")
+        print("La longitud debe ser menor a 50")
         return -1
 
     longitud = int(longitud)
-
+    print("\n")
     for titulo in lista_titulos_encabezado:
         encabezado = titulo.ljust(longitud)
         print(encabezado, end='')
     print("\n")
 
-def calcular_imprimir_dato(lista: list, calculo: str, key_ingresada: str) -> None:
+def imprimir_datos_tabla(lista_datos_fila: list, longitud: str)-> None or -1:
     """
-    calcular_imprimir_dato: calcula e imprime el valor máximo o mínimo de una key dada en una lista.
+    imprimir_datos: Imprime una fila en la tabla con datos de una lista dada y una longitud específica
+    para cada fila.
 
-    :param lista: Una lista de diccionarios que contiene datos.
-    :param calculo: String que indica si se debe calcular el valor máximo o mínimo de una key de
-    datos dada en la lista.
-    :param key_ingresada: String que representa la clave de la que se desea obtener el cálculo y se utiliza
-    para la impresión del resultado.
+    :param lista_datos_fila: Una lista de cadenas que representan los datos que se imprimirán
+    como filas en una tabla.
+    :param longitud: La longitud de los datos de los filas en caracteres.
 
-    :return: Si los datos no cumplen con las validaciones devuelve -1. De lo contrario, la función no
-     devuelve None.
+    :return: None si los parámetros de entrada son válidos o -1 si no se cumple con las validaciones.
     """
-    if calculo != 'max' and calculo != 'min':
-        print(f"El cálculo {calculo} no es válido")
+    if not lista_datos_fila:
+        print("No existen datos en la lista para encabezar")
         return -1
 
-    if not lista:
-        print(f"El cálculo {calculo} no es válido")
+    longitud_valida = re.search(r'^[1-9]$|1[0-9]$|^2[0-9]$|^3[0-9]$|^4[0-9]$|50', longitud)
+    if not bool(longitud_valida):
+        print("La longitud debe ser menor a 50")
         return -1
-    dato_max_min = operacion.calcular_max_min_dato(lista, calculo, key_ingresada)
-    if dato_max_min == -1:
-      return -1
 
-    dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
-    print("Nombre:".ljust(20), f"- {dato_capitalizado}:")
-    imprimir_nombre_dato(dato_max_min, key_ingresada)
-
-def ordenar_imprimir_dato(lista: list, key_imprimir: str, key_ordenar: str)-> None or -1:
-    """
-    ordenar_imprimir_dato: Toma una lista, una key para imprimir y una key para ordenar, y luego
-    ordena la lista por la key de clasificación e imprime el nombre del jugador y los datos
-    especificados.
-
-    :param lista: Una lista de diccionarios que contiene datos.
-    :param key_imprimir: String que representa la key de los datos que se imprimirán para cada
-    dato de la lista.
-    :param key_ordenar: String que representa la key para ordenar la lista por sus valores.
-
-    :return: None si cumple con las validaciones, caso contrario devuelve -1.
-    """
-    if not lista:
-        return -1
-    lista_ordenada = ordenar.quick_sort(lista, key_ordenar)
-    dato_capitalizado = re.sub(r'_', ' ', key_imprimir).capitalize()
-    print("Nombre:".ljust(20), f"- {dato_capitalizado}:")
-    for elemento in lista_ordenada:
-        imprimir_nombre_dato(elemento, key_imprimir)
+    longitud = int(longitud)
+    for titulo in lista_datos_fila:
+        fila = titulo.ljust(longitud)
+        print(fila, end="")
+    print("")

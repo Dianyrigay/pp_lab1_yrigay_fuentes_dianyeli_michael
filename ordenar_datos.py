@@ -1,3 +1,6 @@
+import re
+import imprimir_datos as imprimir
+
 def quick_sort(lista:list, key: str, ascendente:bool = True)->list:
     """
     quick_sort: Ordena una lista de diccionarios por el dato 'key' pasado por parámetro de
@@ -39,3 +42,24 @@ def quick_sort(lista:list, key: str, ascendente:bool = True)->list:
     lista_iz.extend(lista_de)
     lista_ordenada = lista_iz
     return lista_ordenada
+
+def ordenar_imprimir_dato(lista: list, key_imprimir: str, key_ordenar: str)-> None or -1:
+    """
+    ordenar_imprimir_dato: Toma una lista, una key para imprimir y una key para ordenar, y luego
+    ordena la lista por la key de clasificación e imprime el nombre del jugador y los datos
+    especificados.
+
+    :param lista: Una lista de diccionarios que contiene datos.
+    :param key_imprimir: String que representa la key de los datos que se imprimirán para cada
+    dato de la lista.
+    :param key_ordenar: String que representa la key para ordenar la lista por sus valores.
+
+    :return: None si cumple con las validaciones, caso contrario devuelve -1.
+    """
+    if not lista:
+        return -1
+    lista_ordenada = quick_sort(lista, key_ordenar)
+    dato_capitalizado = re.sub(r'_', ' ', key_imprimir).capitalize()
+    imprimir.imprimir_tabla_encabezado(['Nombres',dato_capitalizado], '20')
+    for elemento in lista_ordenada:
+        imprimir.imprimir_obtener_nombre_dato(elemento, key_imprimir)
