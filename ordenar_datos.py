@@ -4,17 +4,18 @@ import imprimir_datos as imprimir
 def quick_sort(lista:list, key: str, ascendente:bool = True)->list:
     """
     quick_sort: Realiza una clasificación rápida en una lista de diccionarios
-    según una clave específica y un orden de clasificación.
+    según una key específica y un orden de clasificación.
 
-    :param lista: una lista de diccionarios que se ordenarán según el valor de una clave específica en
+    :param lista: una lista de diccionarios que se ordenarán según el valor de una key específica en
     cada diccionario
-    :param key: String que representa la clave o atributo de los objetos de la lista que se utilizará para ordenarlos
+    :param key: String que representa la key o atributo de los objetos de la lista que se utilizará para ordenarlos
     :param ascendente: Booleano opcional que determina si la clasificación se debe realizar en orden
     ascendente (True) o descendente (False). Por default es True
 
-    :return: Una lista ordenada basada en el algoritmo de clasificación rápida, utilizando la clave
-    especificada para comparar los elementos bajo el orden recibido por parámetro.
+    :return: Una lista ordenada basada en el algoritmo de clasificación rápida, bajo la key
+    especificada y el orden recibido por parámetro.
     """
+
     i = 0
     lista_de = []
     lista_iz = []

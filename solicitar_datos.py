@@ -1,16 +1,23 @@
 import re
 def solicitar_dato(dato: str) -> str:
     """
-    solicitar_dato: Solicita al usuario por consola que ingrese un dato de un jugador.
+    solicitar_dato: Solicita al usuario que ingrese un tipo específico de datos y devuelve
+    la entrada como una cadena.
 
-    Recibe :param dato: String que hace referencia al dato que el usuario debe ingresar.
+    :param dato: String que representa un tipo de dato, que va a ser el solicitado al usuario.
 
-    Retorna: Un string que es el dato del jugador a buscar o -1 si el usuario se arrepiente de la búsqueda.
+    :return: String que son los datos introducidos por el usuario.
     """
     dato_ingresado = input(f"\nIngrese un {dato} (o ingrese '-1' para salir del submenú): ")
     return dato_ingresado
 
-def solicitar_valor_float() -> float:
+def solicitar_valor_float() -> float or -1:
+    """
+    solicitar_valor_float: Solicita al usuario que ingrese un valor flotante válido y lo devuelve.
+
+    :return: Float que es valor ingresado por el usuario, sino devuelve un entero que es -1, en caso
+    que el usuario no desee continuar con la operación.
+    """
     valor_valido = False
 
     while not valor_valido:
