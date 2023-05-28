@@ -1,7 +1,8 @@
 # Alumna: Dianyeli Yrigay 95984910
+# Tutor: Octavio
 # Division 1E
 
-# PARCIAL PROGRAMACIÓN
+# PRIMER PARCIAL PROGRAMACIÓN
 
 import re
 import json
@@ -12,9 +13,9 @@ import imprimir_datos as imprimir
 import solicitar_datos as solicitar
 import ordenar_datos as ordenar
 
-def clear_console() -> None:
+def limpiar_consola() -> None:
     """
-    clear_console: Borra la pantalla de la consola en Python esperando la entrada del usuario y luego
+    limpiar_consola: Borra la pantalla de la consola en Python esperando la entrada del usuario y luego
     llamando al comando 'cls'.
     """
     _ = input('\nPresione una tecla para continuar...')
@@ -484,11 +485,60 @@ def calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores: list) -
         posicion = jugador["posicion"]
         imprimir.imprimir_datos_tabla([nombre, porcentaje_tiros_de_campo, posicion], '30')
 
+def calcular_obtener_posicion_ranking_jugadores(lista_jugadores: list) -> list or -1:
+    """
+    calcular_obtener_posicion_ranking_jugadores: Calcula y exporta las posiciones de cada jugador
+    en el ranking de puntos, rebotes, asistencias y robos.
+
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
+    representa un jugador.
+
+    :return: Una lista de diccionarios con las posiciones de cada jugador en el ranking.
+    Si no se cumple con las validaciones, devuelve -1.
+    """
+    if not lista_jugadores:
+        print("La lista de jugadores está vacía")
+        return -1
+
+    lista_ordenada_puntos = ordenar.quick_sort_dicts(lista_jugadores, 'puntos_totales', False)
+    lista_ordenada_rebotes = ordenar.quick_sort_dicts(lista_jugadores, 'rebotes_totales', False)
+    lista_ordenada_asistencias = ordenar.quick_sort_dicts(lista_jugadores, 'asistencias_totales', False)
+    lista_ordenada_robos = ordenar.quick_sort_dicts(lista_jugadores, 'robos_totales', False)
+
+    lista_ranking_jugadores = []
+    for jugador in lista_jugadores:
+        dict_posiciones_jugador = {}
+        for i in range(len(lista_ordenada_puntos)):
+            if jugador["nombre"] == lista_ordenada_puntos[i]["nombre"]:
+                dict_posiciones_jugador['Jugador'] = lista_ordenada_puntos[i]["nombre"]
+                dict_posiciones_jugador['Puntos'] = i + 1
+                break
+
+        for i in range(len(lista_ordenada_rebotes)):
+            if jugador["nombre"] == lista_ordenada_rebotes[i]["nombre"]:
+                dict_posiciones_jugador['Rebotes'] = i + 1
+                break
+
+        for i in range(len(lista_ordenada_asistencias)):
+            if jugador["nombre"] == lista_ordenada_asistencias[i]["nombre"]:
+                dict_posiciones_jugador['Asistencias'] = i + 1
+                break
+
+        for i in range(len(lista_ordenada_robos)):
+            if jugador["nombre"] == lista_ordenada_robos[i]["nombre"]:
+                dict_posiciones_jugador['Robos'] = i + 1
+                break
+        lista_ranking_jugadores.append(dict_posiciones_jugador)
+
+    if not lista_ranking_jugadores:
+        print("No se pudo obtener la posición de los juagdores en el ranking")
+
+    return lista_ranking_jugadores
+
 def aplicacion_jugadores(lista_jugadores: list):
     """
-    aplicacion_jugadores: Maneja la aplicación basada en menús para administrar datos de jugadores de
-    baloncesto. Permite al usuario realizar varias operaciones con la lista de jugadores, como
-    mostrar información del jugador, calcular e imprimir estadísticas y exportar datos.
+    aplicacion_jugadores: Imprime el menú y administra datos de la lista de jugadores de
+    baloncesto. Permite al usuario realizar varias operaciones con la lista.
 
     :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
     representa un jugador.
@@ -548,9 +598,10 @@ def aplicacion_jugadores(lista_jugadores: list):
             case 20:
                 calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores)
             case 23:
-                pass
+                lista_ranking_jugadores = calcular_obtener_posicion_ranking_jugadores(lista_jugadores)
+                exportar_csv('posicion_ranking_jugadores.csv', lista_ranking_jugadores)
             case 0:
                 break
             case _:
                 print("Opción no válida")
-        clear_console()
+        limpiar_consola()

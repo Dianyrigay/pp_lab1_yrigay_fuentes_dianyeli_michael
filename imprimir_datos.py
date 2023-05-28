@@ -30,7 +30,7 @@ def imprimir_menu() -> int or -1:
     print("18. Ingresar un valor y mostrar los jugadores que hayan tenido un porcentaje de tiros triples superior a ese valor.")
     print("19. Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas.")
     print("20. Ingresar un valor y mostrar los jugadores , ordenados por posición en la cancha, que hayan tenido un porcentaje de tiros de campo superior a ese valor.")
-    print("23. ")
+    print("23. Calcular de cada jugador cuál es su posición en cada uno de los siguientes ranking: Puntos, Rebotes, Asistencias, Robos. Exportar csv")
     print("0. Salir del programa")
     opcion = input("\nIngrese la opción deseada: ")
     print("\n----------------------------------------------------")

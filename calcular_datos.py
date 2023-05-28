@@ -13,6 +13,7 @@ def calcular_max(lista: list, key_ingresada: str) -> dict or -1:
     :return: Diccionario o -1 si no se cumplen las validaciones.
     """
     if not lista:
+        print("La lista se encuentra vacía, no es posible calcular el máximo")
         return -1
 
     lista_maximos = []
@@ -29,6 +30,7 @@ def calcular_max(lista: list, key_ingresada: str) -> dict or -1:
 
     if dato_maximo is None:
         print(f"No se pudo obtener un valor maximo. Maximo: {dato_maximo}")
+        return -1
 
     return lista_maximos
 
@@ -44,6 +46,7 @@ def calcular_min(lista: list, key_ingresada: str) -> dict or -1:
     :return: Diccionario o -1 si no se cumplen las validaciones.
     """
     if not lista:
+        print("La lista se encuentra vacía, no es posible calcular el mínimo")
         return -1
 
     lista_minimos = []
@@ -60,6 +63,7 @@ def calcular_min(lista: list, key_ingresada: str) -> dict or -1:
 
     if dato_minimo is None:
         print(f"No se pudo obtener un valor minimo. Minimo: {dato_minimo}")
+        return -1
 
     return lista_minimos
 
@@ -75,22 +79,23 @@ def calcular_promedio(lista: list, key_ingresada: str) -> float or -1:
     se cumple con las validaciones, la función devuelve -1.
     """
     if not lista:
+        print("La lista se encuentra vacía, no es posible calcular el promedio")
         return -1
 
     promedio = 0
     suma_valores = 0
     cantidad_key_en_lista = 0
 
-    for jugador in lista:
-        for valor_jugador in jugador.values():
-            if type(valor_jugador) == type(str()) and key_ingresada in jugador:
-                if type(jugador[key_ingresada]) == type(int()) or type(jugador[key_ingresada]) == type(float()):
+    for elemento in lista:
+        for valor_elemento in elemento.values():
+            if type(valor_elemento) == type(str()) and key_ingresada in elemento:
+                if type(elemento[key_ingresada]) == type(int()) or type(elemento[key_ingresada]) == type(float()):
                     if key == key_ingresada:
-                        suma_valores += valor_jugador
+                        suma_valores += valor_elemento
                         cantidad_key_en_lista += 1
-            if type(valor_jugador) == type(dict()) and key_ingresada in valor_jugador:
-                if type(valor_jugador[key_ingresada]) == type(int()) or type(valor_jugador[key_ingresada]) == type(float()):
-                        for key, valor in valor_jugador.items():
+            if type(valor_elemento) == type(dict()) and key_ingresada in valor_elemento:
+                if type(valor_elemento[key_ingresada]) == type(int()) or type(valor_elemento[key_ingresada]) == type(float()):
+                        for key, valor in valor_elemento.items():
                             if key == key_ingresada:
                                 suma_valores += valor
                                 cantidad_key_en_lista += 1
