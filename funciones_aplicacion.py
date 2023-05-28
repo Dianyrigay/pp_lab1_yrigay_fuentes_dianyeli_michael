@@ -7,7 +7,7 @@ import re
 import json
 import csv
 import os
-import operaciones_numericas as operacion
+import calcular_datos as operacion
 import imprimir_datos as imprimir
 import solicitar_datos as solicitar
 import ordenar_datos as ordenar
@@ -134,7 +134,8 @@ def exportar_csv(nombre_archivo: str, lista_data_jugador: list) -> bool:
 def obtener_jugador_nombre_logros(lista_jugadores: list) -> list or -1:
     """
     obtener_jugador_nombre_logros: Toma una lista de jugadores y solicita al usuario que ingrese el nombre
-    de un jugador, luego devuelve una lista de jugadores cuyos nombres coinciden con la entrada.
+    de un jugador reutilizando la funcion 'solicitar_obtener_nombre_jugador', luego devuelve una lista de jugadores
+    cuyos nombres coinciden con el nombre de entrada.
 
     :param lista_jugadores: Una lista de diccionarios que representan a los jugadores, donde cada
     diccionario contiene datos sobre un jugador.
@@ -146,29 +147,8 @@ def obtener_jugador_nombre_logros(lista_jugadores: list) -> list or -1:
     if not lista_jugadores:
         return -1
 
-    nombre_valido = False
-    imprimir.imprimir_nombre_indice_jugadores(lista_jugadores)
-    lista_jugadores_validos = []
+    lista_jugadores_validos = solicitar.solicitar_obtener_nombre_jugador(lista_jugadores)
 
-    while not lista_jugadores_validos:
-        nombre_buscado = solicitar.solicitar_dato('nombre').lower()
-
-        if nombre_buscado == '-1':
-            print("\nIngrese una nueva opción del menú")
-            return -1
-
-        for jugador in lista_jugadores:
-            regex = r'\b'+ nombre_buscado + r'\b'+ r'|\b[a-zA-Z]{1,}'+ nombre_buscado + \
-                    r'\b'+ r'|\b'+ nombre_buscado + r'+[a-zA-Z]{1,}\b|\b'+ nombre_buscado +r'[ a-zA-Z]{1,}\b'
-            nombre_jugador = jugador['nombre'].lower()
-            nombre_valido = re.search(regex, nombre_jugador)
-            nombre_valido = bool(nombre_valido)
-            if nombre_valido:
-                lista_jugadores_validos.append(jugador)
-
-    if not lista_jugadores_validos:
-        print(f"No se pudieron encontrar jugadores que coincidan con {nombre_buscado}")
-        return -1
     return lista_jugadores_validos
 
 def obtener_e_imprimir_jugador_nombre_logros(lista_jugadores: list) -> None or -1:
@@ -182,10 +162,6 @@ def obtener_e_imprimir_jugador_nombre_logros(lista_jugadores: list) -> None or -
     :return: None o un entero que es -1 si no se cumplieron las validaciones.
     """
     lista_jugadores_logros = obtener_jugador_nombre_logros(lista_jugadores)
-
-    if not lista_jugadores_logros:
-        print("No se pudo obtener el nombre del jugador y sus logros")
-        return -1
 
     if lista_jugadores_logros != -1:
         imprimir.imprimir_tabla_encabezado(['Nombre:', 'Logros:'], '20')

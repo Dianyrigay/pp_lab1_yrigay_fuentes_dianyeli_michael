@@ -1,4 +1,6 @@
 import re
+import imprimir_datos as imprimir
+
 def solicitar_dato(dato: str) -> str:
     """
     solicitar_dato: Solicita al usuario que ingrese un tipo específico de datos y devuelve
@@ -33,3 +35,42 @@ def solicitar_valor_float() -> float or -1:
 
     valor_ingresado = float(valor_ingresado)
     return valor_ingresado
+
+def solicitar_obtener_nombre_jugador(lista_jugadores: list) -> list or -1:
+    """
+    solicitar_obtener_nombre_jugador: Busca el nombre de un jugador en una lista de jugadores y devuelve una lista de
+    jugadores que coinciden con el nombre de entrada ingresado por el usuario.
+
+    :param lista_jugadores: Una lista de diccionarios que representan a los jugadores, donde cada
+    diccionario contiene datos sobre un jugador.
+
+    :return: Una lista de diccionarios que contienen información sobre jugadores cuyos nombres coinciden
+    con la entrada proporcionada por el usuario, o -1 si no se cumple con las validaciones.
+    """
+    if not lista_jugadores:
+        print("Lista de jugadores vacía")
+        return -1
+
+    nombre_valido = False
+    imprimir.imprimir_nombre_indice_jugadores(lista_jugadores)
+    lista_jugadores_validos = []
+    while not lista_jugadores_validos:
+        nombre_buscado = solicitar_dato('nombre').lower()
+
+        if nombre_buscado == '-1':
+            print("\nIngrese una nueva opción del menú")
+            return -1
+
+        for jugador in lista_jugadores:
+            regex = r'\b([a-zA-Z]+)?'+ nombre_buscado + r'( [a-zA-Z]+)?|'+ nombre_buscado + r'([a-zA-Z]+)?\b'
+            nombre_jugador = jugador['nombre'].lower()
+            nombre_valido = re.search(regex, nombre_jugador)
+            nombre_valido = bool(nombre_valido)
+            if nombre_valido:
+                lista_jugadores_validos.append(jugador)
+
+    if not lista_jugadores_validos:
+        print(f"No se pudieron encontrar jugadores que coincidan con {nombre_buscado}")
+        return -1
+
+    return lista_jugadores_validos
