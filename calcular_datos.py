@@ -134,31 +134,3 @@ def calcular_datos_mayor_a_valor_ingresado(lista: list, key_ingresada: str, valo
                             if key == key_ingresada and valor > valor_ingresado:
                                 lista_datos_mayor_valor.append(elemento)
     return lista_datos_mayor_valor
-
-def calcular_imprimir_jugadores_mayor_valor(lista_jugadores:list , key_ingresada: str, valor_ingresado: float) -> None or -1:
-    """
-    calcular_imprimir_jugadores_mayor_valor: Toma una lista de jugadores y un par clave-valor y devuelve una lista
-    de jugadores cuyo valor para la key dada es mayor que el valor de entrada e imprime sus nombres.
-
-    :param lista_jugadores: Lista de diccionarios que contiene datos de jugadores, cada diccionario representa un
-    jugador
-    :param key_ingresada: String que representa la key (atributo) del jugador que la función usará para comparar
-    con el parámetro value_ingresado
-    :param valor_ingresado: Float que representa al valor ingresado por el usuario para comparar con los valores de los
-    jugadores en la lista
-
-    :return: Booleano que es True si hay jugadores en la lista con un valor mayor que el valor de entrada e imprime sus
-    nombres y valores. Si no hay tales jugadores, la función devuelve Falso
-    """
-    lista_jugadores_mayor_valor = calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_ingresada, valor_ingresado)
-
-    if not lista_jugadores_mayor_valor:
-        existe_valor_mayor = False
-        return existe_valor_mayor
-
-    existe_valor_mayor = True
-    dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
-    imprimir.imprimir_tabla_encabezado(['Nombre', dato_capitalizado], '20')
-    for jugador in lista_jugadores_mayor_valor:
-        imprimir.imprimir_obtener_nombre_dato(jugador, key_ingresada)
-    return existe_valor_mayor
