@@ -128,8 +128,8 @@ def obtener_jugador_nombre_logros(lista_jugadores: list) -> list or -1:
     if not lista_jugadores:
         return -1
 
-    lista_jugadores_validos = solicitar.solicitar_obtener_nombre_jugador(lista_jugadores)
-    return lista_jugadores_validos
+    lista_jugadores_nombres = solicitar.solicitar_obtener_nombre_jugador(lista_jugadores)
+    return lista_jugadores_nombres
 
 def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> None or -1:
     """
@@ -257,31 +257,31 @@ def calcular_e_imprimir_promedio_puntos_por_partido_excluyendo_min(lista_jugador
     print(f"Excluyendo a {nombre_jugador_min}")
     print(f"\nEl promedio de 'Promedio puntos por partido' del equipo es: {promedio_equipo}")
 
-def calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> None or -1:
+def calcular_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> None or -1:
     """
-    calcular_imprimir_jugador_mayor_logros_obtenidos: Calcula e imprime el jugador con el mayor número
+    calcular_jugador_mayor_logros_obtenidos: Calcula el jugador con el mayor número
     de logros obtenidos de una lista de jugadores.
 
     :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
     representa un jugador.
 
-    :return: None o un entero que es -1.
+    :return: Una lista que contiene el/los jugador/es con la mayor cantidad de logros o
+    un entero que es -1.
     """
     if not lista_jugadores:
         return -1
-    mayor_cantidad_obtenida = False
+
+    lista_jugador_mayor_logros = []
+    mayor_cantidad_logros = None
     for jugador in lista_jugadores:
         if 'logros' in jugador:
-            if not mayor_cantidad_obtenida:
-                jugador_mayor_logros = jugador
+            if mayor_cantidad_logros is None or len(jugador["logros"]) > mayor_cantidad_logros:
+                lista_jugador_mayor_logros = [jugador]
                 mayor_cantidad_logros = len(jugador["logros"])
-                mayor_cantidad_obtenida = True
-            else:
-                if len(jugador["logros"]) > mayor_cantidad_logros:
-                    jugador_mayor_logros = jugador
-                    mayor_cantidad_logros = len(jugador["logros"])
-    imprimir.imprimir_tabla_encabezado(['Nombre', 'Logros'], '20')
-    imprimir.imprimir_obtener_nombre_dato(jugador_mayor_logros,'logros')
+            elif len(jugador["logros"]) == mayor_cantidad_logros:
+                lista_jugador_mayor_logros.append(jugador)
+
+    return lista_jugador_mayor_logros
 
 def calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores: list) -> None or -1:
     """
@@ -394,8 +394,8 @@ def aplicacion_jugadores(lista_jugadores: list):
                 else:
                     print("Debe haber completado la opción 2 anteriormente para poder guardar el archivo")
             case 4:
-                lista_jugadores_logros = obtener_jugador_nombre_logros(lista_jugadores)
-                imprimir_jugadores_nombre_key(lista_jugadores_logros, 'logros')
+                lista_jugadores_nombres = obtener_jugador_nombre_logros(lista_jugadores)
+                imprimir_jugadores_nombre_key(lista_jugadores_nombres, 'logros')
             case 5:
                 calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores)
             case 6:
@@ -430,7 +430,8 @@ def aplicacion_jugadores(lista_jugadores: list):
             case 16:
                 calcular_e_imprimir_promedio_puntos_por_partido_excluyendo_min(lista_jugadores)
             case 17:
-                calcular_imprimir_jugador_mayor_logros_obtenidos(lista_jugadores)
+                lista_jugador_mayor_logros = calcular_jugador_mayor_logros_obtenidos(lista_jugadores)
+                imprimir_jugadores_nombre_key(lista_jugador_mayor_logros,'logros')
             case 18:
                 lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'porcentaje_tiros_triples')
                 imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'porcentaje_tiros_triples')
