@@ -1,45 +1,5 @@
 import re
 
-def imprimir_menu() -> int or -1:
-    """
-    imprimir_menu: Imprime un menú con diferentes opciones y devuelve la opción seleccionada por el
-    usuario como un número entero.
-
-    :return: Un número entero que representa la opción seleccionada por el usuario en el menú. Si el
-    usuario ingresa una opción no válida, la función devuelve -1.
-    """
-    print("\n----------------------------------------------------")
-    print("Menú de opciones:")
-    print("1. Mostrar la lista de todos los jugadores del Dream Team con Nombre y Posición.")
-    print("2. Buscar jugador por índice y mostrar sus estadísticas completas.")
-    print("3. Exportar archivo CSV con las estadisticas del jugador del punto 2.")
-    print("4. Buscar jugador por nombre y mostrar sus logros.")
-    print("5. Calcular y mostrar el promedio de puntos por partido del equipo del Dream Team ordenado por nombre de manera ascendente.")
-    print("6. Buscar jugador por nombre y mostrar si es miembro del Salón de la Fama del baloncesto.")
-    print("7. Calcular y mostrar el jugador con la mayor cantidad de rebotes totales.")
-    print("8. Calcular y mostrar el jugador con el mayor porcentaje de tiros de campo.")
-    print("9. Calcular y mostrar el jugador con la mayor cantidad de asistencias totales.")
-    print("10. Ingresar un valor y mostrar los jugadores que han promediado más puntos por partido que ese valor.")
-    print("11. Ingresar un valor y mostrar los jugadores que han promediado más rebotes por partido que ese valor.")
-    print("12. Ingresar un valor y mostrar los jugadores que han promediado más asistencias por partido que ese valor.")
-    print("13. Calcular y mostrar el jugador con la mayor cantidad de robos totales.")
-    print("14. Calcular y mostrar el jugador con la mayor cantidad de bloqueos totales.")
-    print("15. Ingresar un valor y mostrar los jugadores que hayan tenido un porcentaje de tiros libres superior a ese valor.")
-    print("16. Calcular y mostrar el promedio de puntos por partido del equipo excluyendo al jugador con la menor cantidad de puntos por partido.")
-    print("17. Calcular y mostrar el jugador con la mayor cantidad de logros obtenidos.")
-    print("18. Ingresar un valor y mostrar los jugadores que hayan tenido un porcentaje de tiros triples superior a ese valor.")
-    print("19. Calcular y mostrar el jugador con la mayor cantidad de temporadas jugadas.")
-    print("20. Ingresar un valor y mostrar los jugadores , ordenados por posición en la cancha, que hayan tenido un porcentaje de tiros de campo superior a ese valor.")
-    print("23. Calcular de cada jugador cuál es su posición en cada uno de los siguientes ranking: Puntos, Rebotes, Asistencias, Robos. Exportar csv")
-    print("0. Salir del programa")
-    opcion = input("\nIngrese la opción deseada: ")
-    print("\n----------------------------------------------------")
-    opcion_valida = re.search(r'^[0-9]$|^1[0-9]$|^20$|^23$', opcion)
-    if not bool(opcion_valida):
-        return -1
-    opcion = int(opcion)
-    return opcion
-
 def obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> dict or -1:
     """
     obtener_nombre_dato: Obtiene el nombre y un valor de datos específico de un diccionario,
@@ -88,7 +48,7 @@ def obtener_nombre_dato(dict_datos: dict, key_ingresada: str) -> dict or -1:
     dict_nombre_dato[key_ingresada] = dato
     return dict_nombre_dato
 
-def imprimir_obtener_nombre_dato(dict_datos: list, key_ingresada: str) -> None or -1:
+def imprimir_nombre_dato(nombre: str, dato: any) -> None or -1:
     """
     imprimir_dato: formatea el nombre de la key e imprime un encabezado de tabla y el nombre y el valor
     de los datos máximos.
@@ -99,25 +59,12 @@ def imprimir_obtener_nombre_dato(dict_datos: list, key_ingresada: str) -> None o
 
     :return: None o -1 si no se cumple con las validaciones.
     """
-    if type(dict_datos) != type(dict()):
-        print(f"El tipo {type(dict_datos)} no es válido, intente nuevamente")
-        return -1
-
-    dict_nombre_dato = obtener_nombre_dato(dict_datos, key_ingresada)
-
-    if dict_nombre_dato == -1:
-        print("No se pudo obtener el nombre y el dato solicitado.")
-        return -1
-
-    dato = dict_nombre_dato[key_ingresada]
-    nombre = dict_nombre_dato['nombre']
-
-    if dato == None:
-        print(f"No se pudo obtener el/los valor/es de {key_ingresada}")
+    if dato == None or type(nombre) != type(str()):
+        print(f"Los parámetros recibidos no son válidos")
         return -1
 
     if type(dato) != type(dict()) and type(dato) != type(list()):
-        imprimir_nombre_str_formateado(nombre, dato)
+        print(nombre.ljust(20), dato)
     elif type(dato) == type(dict()):
         imprimir_nombre_dict_formateado(nombre, dato)
     elif type(dato) == type(list()):
@@ -126,12 +73,16 @@ def imprimir_obtener_nombre_dato(dict_datos: list, key_ingresada: str) -> None o
         print(f"EL tipo de dato {type(dato)} no se puede imprimir")
         return -1
 
-def imprimir_nombre_str_formateado(nombre: str, dato: str or int or float) -> None:
-    print(nombre.ljust(20), dato)
+def imprimir_nombre_dict_formateado(nombre: str, diccionario: dict) -> None:
+    """
+    imprimir_nombre_dict_formateado: Recibe un nombre y un diccionario como entrada y los imprime en
+    formato de tabla.
 
-def imprimir_nombre_dict_formateado(nombre: str, dato: dict) -> None:
+    :param nombre: String que representa un nombre.
+    :param diccionario: Diccionario que contiene par de clave-valor.
+    """
     i = 0
-    for key, valor in dato.items():
+    for key, valor in diccionario.items():
         if i == 0:
             print(nombre.ljust(20), end="")
             print(f"{key.capitalize()}: ", valor)
@@ -139,9 +90,16 @@ def imprimir_nombre_dict_formateado(nombre: str, dato: dict) -> None:
             print("".ljust(20),f"{key.capitalize()}: ", valor)
         i += 1
 
-def imprimir_nombre_list_formateada(nombre: str, dato: list) -> None:
+def imprimir_nombre_list_formateada(nombre: str, lista: list) -> None:
+    """
+    imprimir_nombre_list_formateada: Recibe un nombre y una lista como entrada y los imprime en
+    formato de tabla.
+
+    :param nombre: String que representa un nombre.
+    :param lista: Lista de elementos que se imprimirán de forma formateada
+    """
     i = 0
-    for elemento in dato:
+    for elemento in lista:
         if i == 0:
             print(nombre.ljust(20), end="")
             print(f"{elemento.capitalize()}")

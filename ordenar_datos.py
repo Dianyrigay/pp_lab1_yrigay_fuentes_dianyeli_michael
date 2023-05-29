@@ -1,6 +1,3 @@
-import re
-import imprimir_datos as imprimir
-
 def quick_sort(lista:list, key_ingresada: str, ascendente:bool = True)->list:
     """
     quick_sort: Realiza una clasificación rápida en una lista de diccionarios según una key
@@ -13,7 +10,6 @@ def quick_sort(lista:list, key_ingresada: str, ascendente:bool = True)->list:
 
     :return: Una lista ordenada, bajo la key especificada y el orden recibido por parámetro.
     """
-
     i = 0
     lista_de = []
     lista_iz = []

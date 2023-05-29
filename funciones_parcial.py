@@ -37,26 +37,33 @@ def leer_archivo(nombre_archivo: str) -> list:
     return lista_jugadores_json
 
 def imprimir_jugadores_nombre_key(lista_jugadores_imprimir: list, key_ingresada:str ) -> None or -1:
+    """
+    imprimir_jugadores_nombre_key: Imprime un encabezado de tabla con la key ingresada y "Nombre",
+    y el/los valor/es de la clave de cada jugador de la lista recibida.
+
+    :param lista_jugadores_imprimir: Una lista de diccionarios que contiene datos de jugadores.
+    :param key_ingresada: String que representa la clave para imprimir el valor de cada jugador.
+
+    :return: None o un int que es -1 si no se cumple con las validaciones.
+    """
     if not lista_jugadores_imprimir:
-        print("La lista esta vacía")
         return -1
 
     dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
     imprimir.imprimir_tabla_encabezado(['Nombre',dato_capitalizado], '20')
     for jugador in lista_jugadores_imprimir:
-        imprimir.imprimir_obtener_nombre_dato(jugador, key_ingresada)
+        dict_nombre_dato= imprimir.obtener_nombre_dato(jugador, key_ingresada)
+        imprimir.imprimir_nombre_dato(jugador['nombre'], dict_nombre_dato[key_ingresada])
 
 def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list) -> list or -1:
     """
     obtener_e_imprimir_jugador_nombre_estadisticas: Obtiene e imprime el nombre y las estadísticas de un jugador
-    seleccionado de una lista de jugadores según su índice.
+    según el índice ingresado por el usuario.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
-    :return: Una lista que contiene un diccionario con las estadísticas, el nombre y la posición del jugador
-    seleccionado de la lista de jugadores. Si la lista de jugadores está vacía o el usuario ingresa '-1' como índice
-    del jugador, la función devuelve un entero que es -1.
+    :return: Una lista del jugador seleccionado con sus datos exceptuando sus logros.
+    Si no se cumple alguna validación retorna un int que es -1
     """
     if not lista_jugadores:
         print("La lista de jugadores está vacía")
@@ -64,7 +71,11 @@ def obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores: list) -> lis
 
     indice_ingresado = solicitar.solicitar_valor_indice(lista_jugadores)
 
+    if indice_ingresado == -1:
+        return -1
+
     indice = 0
+    lista_data_jugador = []
     imprimir.imprimir_tabla_encabezado(['Nombre', 'Estadísticas'], '20')
 
     for jugador in lista_jugadores:
@@ -114,33 +125,29 @@ def exportar_csv(nombre_archivo: str, lista_data_jugador: list) -> bool:
 
 def obtener_jugador_nombre_logros(lista_jugadores: list) -> list or -1:
     """
-    obtener_jugador_nombre_logros: Toma una lista de jugadores y solicita al usuario que ingrese el nombre
-    de un jugador reutilizando la funcion 'solicitar_obtener_nombre_jugador', luego devuelve una lista de jugadores
-    cuyos nombres coinciden con el nombre de entrada.
+    obtener_jugador_nombre_logros: Solicita al usuario que ingrese un nombre de jugador y obtiene
+    una lista de jugadores que coincidieron con el nombre ingresado.
 
-    :param lista_jugadores: Una lista de diccionarios que representan a los jugadores, donde cada
-    diccionario contiene datos sobre un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contienen datos de jugadores.
 
-    :return: Una lista de diccionarios que contienen información sobre jugadores cuyos nombres coinciden
-    con lo ingresado por el usuario. Devuelve un entero que es -1 si el usuario ingresa "-1" indicando que desea volver al menu,
-    o si no se encontraron nombres fuera de las validaciones realizadas.
+    :return: Una lista de los jugadores que coincidieron con el nombre de entrada o -1 si no se
+    cumplen las validaciones.
     """
     if not lista_jugadores:
+        print("La lista de jugadores está vacía")
         return -1
 
-    lista_jugadores_nombres = solicitar.solicitar_obtener_nombre_jugador(lista_jugadores)
-    return lista_jugadores_nombres
+    lista_jugadores_encontrados = solicitar.solicitar_obtener_nombre_jugador(lista_jugadores)
+    return lista_jugadores_encontrados
 
 def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> None or -1:
     """
-    calcular_e_imprimir_promedio_puntos_por_partido: calcula e imprime el promedio de 'promedio_puntos_por_partido'
+    calcular_e_imprimir_promedio_puntos_por_partido: Calcula e imprime el promedio de 'promedio_puntos_por_partido'
     de la lista de jugadores y también ordena la lista por nombre de jugador.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
-    :return: Si la lista de entrada `lista_jugadores` está vacía, la función devuelve un entero que es -1. De lo
-    contrario, None.
+    :return: None o -1 si no se cumplen las validaciones.
     """
     if not lista_jugadores:
         return -1
@@ -149,27 +156,27 @@ def calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores: list) -> No
     lista_ordenada_nombres = ordenar.quick_sort(lista_jugadores, 'nombre')
 
     if not lista_ordenada_nombres:
-        print("No se pudo ordear la lista")
+        print("No se pudo ordenar la lista")
+        return -1
+    if promedio_equipo == -1:
         return -1
 
-    imprimir.imprimir_jugadores(lista_ordenada_nombres,'promedio_puntos_por_partido')
+    imprimir_jugadores_nombre_key(lista_ordenada_nombres,'promedio_puntos_por_partido')
     print(f"\nPromedio de 'Promedio puntos por partido' del equipo: {promedio_equipo}")
 
 def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> None or -1:
     """
-    imprimir_jugador_nombre_salon_fama: imprime una tabla de jugadores de baloncesto y si son o no miembros
-    del Salón de la Fama del baloncesto.
+    imprimir_jugador_nombre_salon_fama: Solicita un nombre al usuario e imprime una tabla con el/los nombre/s
+    que coinciden con el mismo y si son o no miembros del Salón de la Fama del baloncesto.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
-    :return: Si el tipo de `lista_jugadores_buscados` no es una lista, la función devuelve un entero que es
-    -1. De lo contrario, devuelve None.
+    :return: None o -1 si no se cumple con las validaciones.
     """
     if not lista_jugadores:
         return -1
     lista_jugadores_buscados = obtener_jugador_nombre_logros(lista_jugadores)
-    if type(lista_jugadores_buscados) != type(list()):
+    if lista_jugadores_buscados == -1:
         return -1
 
     imprimir.imprimir_tabla_encabezado(['Nombre', 'Es miembro del Salón de la Fama del baloncesto'], '20')
@@ -183,17 +190,18 @@ def imprimir_jugador_nombre_salon_fama(lista_jugadores: list) -> None or -1:
 
 def calcular_jugador_dato_max_key(lista_jugadores: list, key_ingresada:str ) -> list or -1:
     """
-    calcular_jugador_dato_max_key: Calcula y obtiene el jugador con el mayor valor de la key proporcionada por
-    parámetro de una lista de jugadores.
+    calcular_jugador_dato_max_key: Calcula y obtiene el jugador con el maximo valor de la key ingresada por
+    la lista de jugadores.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
-    :return: None o un entero que es -1.
+    :return: Una lista de diccionarios con el/los jugador/es con el dato maximo o un entero que es -1
+    si no se cumple con las validaciones.
     """
     if not lista_jugadores:
         print(f"La lista está vacía, no es posible realizar la operación")
         return -1
+
     lista_jugador_dato_max = calcular.calcular_max(lista_jugadores, key_ingresada)
 
     if lista_jugador_dato_max == -1 or not lista_jugador_dato_max:
@@ -204,26 +212,27 @@ def calcular_jugador_dato_max_key(lista_jugadores: list, key_ingresada:str ) -> 
 
 def calcular_jugadores_mayor_valor_key(lista_jugadores: list, key_ingresada: str) -> list or -1:
     """
-    calcular_imprimir_jugadores_asistencias_partido_mayor_valor: calcula e imprime los jugadores que
-    tienen un 'promedio_asistencias_por_partido' más alto que un valor dado.
+    calcular_jugadores_mayor_valor_key: calcula y obtiene los jugadores que tienen un valor mas alto de la
+    key ingresada que el solicitado al usuario.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
-    :return: None o un entero que es -1.
+    :return: Una lista de diccionarios con los jugadores que tienen mayor valor al ingresado o un entero que es -1
+    si no se cumple con las validaciones.
     """
     if not lista_jugadores:
         return -1
 
+    lista_jugadores_mayor_valor = []
+
     valor_ingresado = solicitar.solicitar_valor_float()
     if valor_ingresado == -1:
-        return -1
+        return lista_jugadores_mayor_valor
 
     lista_jugadores_mayor_valor = calcular.calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_ingresada, valor_ingresado)
 
     if not lista_jugadores_mayor_valor:
         print("\nNo existen jugadores que tengan mayor valor que el ingresado")
-        return -1
 
     return lista_jugadores_mayor_valor
 
@@ -232,8 +241,7 @@ def calcular_e_imprimir_promedio_puntos_por_partido_excluyendo_min(lista_jugador
     calcular_e_imprimir_promedio_puntos_por_partido_excluyendo_min: Calcula e imprime el promedio de puntos
     por juego de un equipo, excluyendo al jugador con el 'promedio_puntos_por_partido' más bajo.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
     :return: None o un entero que es -1.
     """
@@ -262,8 +270,7 @@ def calcular_jugador_mayor_logros_obtenidos(lista_jugadores: list) -> None or -1
     calcular_jugador_mayor_logros_obtenidos: Calcula el jugador con el mayor número
     de logros obtenidos de una lista de jugadores.
 
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
+    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores.
 
     :return: Una lista que contiene el/los jugador/es con la mayor cantidad de logros o
     un entero que es -1.
@@ -358,87 +365,3 @@ def calcular_obtener_posicion_ranking_jugadores(lista_jugadores: list) -> list o
         print("No se pudo obtener la posición de los juagdores en el ranking")
 
     return lista_ranking_jugadores
-
-def aplicacion_jugadores(lista_jugadores: list):
-    """
-    aplicacion_jugadores: Imprime el menú y administra datos de la lista de jugadores de
-    baloncesto. Permite al usuario realizar varias operaciones con la lista.
-
-    :param lista_jugadores: Una lista de diccionarios que contiene datos de jugadores, cada diccionario
-    representa un jugador.
-    """
-    flag_guardar_archivo = False
-    while True:
-
-        opcion = imprimir.imprimir_menu()
-        opcion_valida = re.search(r'2', str(opcion))
-        if bool(opcion_valida):
-            flag_guardar_archivo = True
-        match opcion:
-            case 1:
-                imprimir_jugadores_nombre_key(lista_jugadores, 'posicion')
-            case 2:
-                lista_data_jugador = obtener_e_imprimir_jugador_nombre_estadisticas(lista_jugadores)
-                if lista_data_jugador != -1:
-                    nombre_jugador = lista_data_jugador[0]['nombre'].lower()
-                    nombre_jugador = re.sub(r" ", "_", nombre_jugador)
-            case 3:
-                if flag_guardar_archivo and lista_data_jugador != -1:
-                    exportar_csv(f'jugador_{nombre_jugador}.csv', lista_data_jugador)
-                else:
-                    print("Debe haber completado la opción 2 anteriormente para poder guardar el archivo")
-            case 4:
-                lista_jugadores_nombres = obtener_jugador_nombre_logros(lista_jugadores)
-                imprimir_jugadores_nombre_key(lista_jugadores_nombres, 'logros')
-            case 5:
-                calcular_e_imprimir_promedio_puntos_por_partido(lista_jugadores)
-            case 6:
-                imprimir_jugador_nombre_salon_fama(lista_jugadores)
-            case 7:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'rebotes_totales')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'rebotes_totales')
-            case 8:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'porcentaje_tiros_de_campo')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'porcentaje_tiros_de_campo')
-            case 9:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'asistencias_totales')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'asistencias_totales')
-            case 10:
-                lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'promedio_puntos_por_partido')
-                imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'promedio_puntos_por_partido')
-            case 11:
-                lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'promedio_rebotes_por_partido')
-                imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'promedio_rebotes_por_partido')
-            case 12:
-                lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'promedio_asistencias_por_partido')
-                imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'promedio_asistencias_por_partido')
-            case 13:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'robos_totales')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'robos_totales')
-            case 14:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'bloqueos_totales')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'bloqueos_totales')
-            case 15:
-                lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'porcentaje_tiros_libres')
-                imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'porcentaje_tiros_libres')
-            case 16:
-                calcular_e_imprimir_promedio_puntos_por_partido_excluyendo_min(lista_jugadores)
-            case 17:
-                lista_jugador_mayor_logros = calcular_jugador_mayor_logros_obtenidos(lista_jugadores)
-                imprimir_jugadores_nombre_key(lista_jugador_mayor_logros,'logros')
-            case 18:
-                lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_jugadores, 'porcentaje_tiros_triples')
-                imprimir_jugadores_nombre_key(lista_jugadores_mayor_valor, 'porcentaje_tiros_triples')
-            case 19:
-                lista_dato_max = calcular_jugador_dato_max_key(lista_jugadores, 'temporadas')
-                imprimir_jugadores_nombre_key(lista_dato_max, 'temporadas')
-            case 20:
-                calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores)
-            case 23:
-                lista_ranking_jugadores = calcular_obtener_posicion_ranking_jugadores(lista_jugadores)
-                exportar_csv('posicion_ranking_jugadores.csv', lista_ranking_jugadores)
-            case 0:
-                break
-            case _:
-                print("Opción no válida")
-        limpiar_consola()
