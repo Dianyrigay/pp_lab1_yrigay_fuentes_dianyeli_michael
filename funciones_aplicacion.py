@@ -42,7 +42,7 @@ def imprimir_jugadores_nombre_key(lista_jugadores_imprimir: list, key_ingresada:
         return -1
 
     dato_capitalizado = re.sub(r'_', ' ', key_ingresada).capitalize()
-    imprimir.imprimir_tabla_encabezado(['Nombres',dato_capitalizado], '20')
+    imprimir.imprimir_tabla_encabezado(['Nombre',dato_capitalizado], '20')
     for jugador in lista_jugadores_imprimir:
         imprimir.imprimir_obtener_nombre_dato(jugador, key_ingresada)
 
@@ -202,7 +202,7 @@ def calcular_jugador_dato_max_key(lista_jugadores: list, key_ingresada:str ) -> 
 
     return lista_jugador_dato_max
 
-def calcular_jugadores_mayor_valor_key(lista_jugadores: list, key_calcular: str) -> list or -1:
+def calcular_jugadores_mayor_valor_key(lista_jugadores: list, key_ingresada: str) -> list or -1:
     """
     calcular_imprimir_jugadores_asistencias_partido_mayor_valor: calcula e imprime los jugadores que
     tienen un 'promedio_asistencias_por_partido' más alto que un valor dado.
@@ -219,10 +219,10 @@ def calcular_jugadores_mayor_valor_key(lista_jugadores: list, key_calcular: str)
     if valor_ingresado == -1:
         return -1
 
-    lista_jugadores_mayor_valor = calcular.calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_calcular, valor_ingresado)
+    lista_jugadores_mayor_valor = calcular.calcular_datos_mayor_a_valor_ingresado(lista_jugadores, key_ingresada, valor_ingresado)
 
     if not lista_jugadores_mayor_valor:
-        print("\nNo existen jugadores que tengan más puntos por partido que ese valor")
+        print("\nNo existen jugadores que tengan mayor valor que el ingresado")
         return -1
 
     return lista_jugadores_mayor_valor
@@ -294,15 +294,9 @@ def calcular_imprimir_jugadores_tiros_campo_mayor_valor(lista_jugadores: list) -
     :return: None o un entero que es -1.
     """
     lista_ordenada = ordenar.quick_sort(lista_jugadores, 'posicion')
-    valor_ingresado = solicitar.solicitar_valor_float()
+    lista_jugadores_mayor_valor = calcular_jugadores_mayor_valor_key(lista_ordenada,'porcentaje_tiros_de_campo')
 
-    if valor_ingresado == -1:
-        return -1
-
-    lista_jugadores_mayor_valor = calcular.calcular_datos_mayor_a_valor_ingresado(lista_ordenada,'porcentaje_tiros_de_campo', valor_ingresado)
-
-    if not lista_jugadores_mayor_valor:
-        print("\nNo existen jugadores que tengan mayor porcentaje de tiros de campo que ese valor")
+    if lista_jugadores_mayor_valor == -1:
         return -1
 
     imprimir.imprimir_tabla_encabezado(['Nombre', 'Porcentaje tiros de campo', 'Posición'], '30')
