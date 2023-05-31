@@ -1,7 +1,7 @@
 import re
 import imprimir_datos as imprimir
 
-def calcular_max(lista: list, key_ingresada: str) -> dict or -1:
+def calcular_max(lista: list, key_ingresada: str) -> list or -1:
     """
     calcular_max: Calcula el valor máximo de una key específica en una lista de diccionarios y devuelve
     una lista de todos los valores máximos encontrados.
@@ -34,7 +34,7 @@ def calcular_max(lista: list, key_ingresada: str) -> dict or -1:
 
     return lista_maximos
 
-def calcular_min(lista: list, key_ingresada: str) -> dict or -1:
+def calcular_min(lista: list, key_ingresada: str) -> list or -1:
     """
     calcular_min: Calcula el valor mínimo de una key específica en una lista de diccionarios y devuelve
     una lista de todos los valores mínimos encontrados.

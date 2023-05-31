@@ -365,3 +365,79 @@ def calcular_obtener_posicion_ranking_jugadores(lista_jugadores: list) -> list o
         print("No se pudo obtener la posición de los juagdores en el ranking")
 
     return lista_ranking_jugadores
+
+def calcular_cantidad_jugadores_por_posicion(lista_jugadores: list):
+    if not lista_jugadores:
+        print("La lista se encuentra vacía")
+        return -1
+
+    dict_podision_cantidad = {}
+    for jugador in lista_jugadores:
+        for key, valor in jugador.items():
+            if key == 'posicion':
+                if valor in dict_podision_cantidad:
+                    dict_podision_cantidad[valor] +=1
+                else:
+                    dict_podision_cantidad[valor] = 1
+    return dict_podision_cantidad
+
+# Mostrar la lista de jugadores ordenadas por la cantidad de All-Star de forma descendente. La salida por pantalla debe tener un formato similar a este:
+# Michael Jordan (14 veces All Star)
+# Magic Johnson (12 veces All-Star)
+def obtener_jugadores_cantidad_all_star(lista_jugadores: list):
+    lista_jugadores_all_star = []
+
+    regex = r'^([0-9]+) veces All-Star$'
+    for jugador in lista_jugadores:
+        dict_nombre_cantidad_all_star = {}
+        for key, valor in jugador.items():
+            if type(valor) == type(list()):
+                for elemento in valor:
+                    elemento_valido = re.search(regex, elemento)
+                    if bool(elemento_valido):
+                        cantidad = elemento_valido.group(1)
+                        cantidad = int(cantidad)
+                        dict_nombre_cantidad_all_star["nombre"] = jugador["nombre"]
+                        dict_nombre_cantidad_all_star["logros"] = cantidad
+                        lista_jugadores_all_star.append(dict_nombre_cantidad_all_star)
+
+
+    lista_jugadores_all_star = ordenar.quick_sort(lista_jugadores_all_star, 'logros', False)
+    for jugador in lista_jugadores_all_star:
+            jugador['logros'] = str(jugador['logros'])
+            jugador['logros'] += ' veces All-Star'
+
+    return lista_jugadores_all_star
+
+
+def obtener_mayores_estadisticas_por_valor(lista_jugadores: list):
+    jugadores_mejores_estadisticas = []
+    for jugador in lista_jugadores:
+        for key, valor in jugador['estadisticas'].items():
+            jugadores_dato_max = calcular.calcular_max(lista_jugadores, key)
+            for jugador_max in jugadores_dato_max:
+                jugadores_mejores_estadisticas.append(jugador_max)
+                imprimir.imprimir_datos_tabla([jugador_max["nombre"],key, str(jugador_max['estadisticas'][key])], '40')
+        break
+
+    return jugadores_mejores_estadisticas
+
+def obtener_jugador_mejores_estadisticas(lista_jugadores: list):
+    if not lista_jugadores:
+        return -1
+
+    max_jugador_estadisticas = None
+    max_valor = 0
+    for jugador in lista_jugadores:
+        estadistica_total = 0
+        for estadistica in jugador["estadisticas"].values():
+            estadistica_total += estadistica
+        if max_jugador_estadisticas is None or estadistica_total > max_valor:
+            max_jugador_estadisticas = jugador
+
+    nombre = max_jugador_estadisticas["nombre"]
+    print(f"Jugador con mayores estadisticas: {nombre}")
+
+
+
+
