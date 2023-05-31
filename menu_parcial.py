@@ -128,6 +128,7 @@ def aplicacion_jugadores(lista_jugadores: list):
                     imprimir.imprimir_datos_tabla([key, str(valor)], '20')
             case 25:
                 lista_jugadores_all_star = obtener_jugadores_cantidad_all_star(lista_jugadores)
+                imprimir.imprimir_tabla_encabezado(['Nombre', 'Cantidad All Star'], '30')
                 for jugador in lista_jugadores_all_star:
                     imprimir.imprimir_datos_tabla([jugador["nombre"], jugador["logros"]], '30')
             case 26:

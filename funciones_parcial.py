@@ -412,6 +412,7 @@ def obtener_jugadores_cantidad_all_star(lista_jugadores: list):
 
 def obtener_mayores_estadisticas_por_valor(lista_jugadores: list):
     jugadores_mejores_estadisticas = []
+    imprimir.imprimir_tabla_encabezado(['Nombre', 'Estadistica', 'Puntuación'], '40')
     for jugador in lista_jugadores:
         for key, valor in jugador['estadisticas'].items():
             jugadores_dato_max = calcular.calcular_max(lista_jugadores, key)
@@ -434,6 +435,7 @@ def obtener_jugador_mejores_estadisticas(lista_jugadores: list):
             estadistica_total += estadistica
         if max_jugador_estadisticas is None or estadistica_total > max_valor:
             max_jugador_estadisticas = jugador
+            max_valor = estadistica_total
 
     nombre = max_jugador_estadisticas["nombre"]
     print(f"Jugador con mayores estadisticas: {nombre}")
